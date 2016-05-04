@@ -32,7 +32,7 @@ public class JObjectsLogFormatter extends Formatter {
         // .append(Thread.currentThread().getName()).append('|')
         .append(" " + format.format(new Date(record.getMillis())))
         .append(" : ")
-        .append("..."+StringUtils.substringAfterLast(record.getSourceClassName(), "com.softcomputing.jaas.") +"."+ record.getSourceMethodName()+"()")
+        .append("..."+StringUtils.substringAfterLast(record.getSourceClassName(), "org.jobjects.") +"."+ record.getSourceMethodName()+"()")
         .append(" : ");
 
     if (record.getParameters() != null) {
