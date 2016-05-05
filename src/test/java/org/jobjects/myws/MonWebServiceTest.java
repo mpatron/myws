@@ -38,7 +38,6 @@ public class MonWebServiceTest extends AbstractRemoteIT {
 
   @Test
   public void testMafonction() throws IOException, SAXException {
-    JObjectsLogFormatter.initializeLogging();
     LOGGER.info("deployUrl : " + (deployUrl==null?StringUtils.EMPTY:deployUrl.toString()));
     WebConversation webConversation = new WebConversation();
     InputStream source = new ByteArrayInputStream("rien".getBytes());

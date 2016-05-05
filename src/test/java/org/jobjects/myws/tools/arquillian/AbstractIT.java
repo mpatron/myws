@@ -18,6 +18,7 @@ import org.jboss.shrinkwrap.api.formatter.Formatters;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.PomEquippedResolveStage;
+import org.jobjects.myws.tools.log.JObjectsLogFormatter;
 
 /**
  * @author Mickael Patron 2015
@@ -42,6 +43,7 @@ public class AbstractIT {
   }
 
   public static WebArchive createTestableDeployment() {
+    JObjectsLogFormatter.initializeLogging();
     
     PomEquippedResolveStage pom = Maven.resolver().loadPomFromFile("pom.xml");
     File[] commons_lang3 = pom.resolve("org.apache.commons:commons-lang3").withTransitivity().asFile();    
