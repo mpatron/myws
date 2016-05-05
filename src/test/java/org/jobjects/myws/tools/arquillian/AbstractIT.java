@@ -1,14 +1,9 @@
 package org.jobjects.myws.tools.arquillian;
 
 import java.io.File;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.logmanager.Level;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -36,7 +31,7 @@ public class AbstractIT {
 
     @Override
     public boolean include(ArchivePath archivePath) {
-      LOGGER.info("archivePath:" + archivePath.get());
+      LOGGER.fine("archivePath:" + archivePath.get());
       return !StringUtils.endsWith(archivePath.get(), "Test.class") && !StringUtils.startsWith(archivePath.get(), "org/jobjects/myws/tools/arquillian");
     }
 
@@ -79,7 +74,7 @@ public class AbstractIT {
 
     war.as(ZipExporter.class).exportTo(new File("target/myPackage.war"), true);
 
-    LOGGER.info("==> War name :" + war.toString(Formatters.VERBOSE));
+    LOGGER.fine("==> War name :" + war.toString(Formatters.VERBOSE));
 
     return war;
   }
@@ -95,7 +90,7 @@ public class AbstractIT {
    *          directory for the base package
    */
   protected static void addAllPackages(WebArchive war, String prefix, File dir) {
-    LOGGER.info("Package add:" + prefix);
+    LOGGER.fine("Package add:" + prefix);
     // war.addPackage(prefix);
     war.addPackages(false, new MyFilter(), prefix);
     for (File file : dir.listFiles()) {
@@ -130,7 +125,7 @@ public class AbstractIT {
         addAllResources(war, prefix, file);
       }
     } else {
-      LOGGER.info("Ressource add:" + prefix + dir.getName());
+      LOGGER.fine("Ressource add:" + prefix + dir.getName());
       war.addAsResource(dir, prefix + dir.getName());
     }
   }

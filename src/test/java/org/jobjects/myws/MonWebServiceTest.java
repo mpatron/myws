@@ -15,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jobjects.myws.tools.arquillian.AbstractRemoteIT;
-import org.jobjects.myws.tools.log.JObjectsLogFormatter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.xml.sax.SAXException;
@@ -40,8 +39,8 @@ public class MonWebServiceTest extends AbstractRemoteIT {
   public void testMafonction() throws IOException, SAXException {
     LOGGER.info("deployUrl : " + (deployUrl==null?StringUtils.EMPTY:deployUrl.toString()));
     WebConversation webConversation = new WebConversation();
-    InputStream source = new ByteArrayInputStream("rien".getBytes());
-    PutMethodWebRequest request = new PutMethodWebRequest(deployUrl + "/api/lapp/mafonction?param1=pArAm_1&param2=PaRam_2", source, MediaType.APPLICATION_JSON);
+    InputStream source = new ByteArrayInputStream("une fois rien...".getBytes());
+    PutMethodWebRequest request = new PutMethodWebRequest(deployUrl.toString().replace("8080", "9143") + "/api/lapp/mafonction?param1=pArAm_1&param2=PaRam_2", source, MediaType.APPLICATION_JSON);
     WebResponse response = webConversation.getResponse(request);
     assertEquals(200,response.getResponseCode());
     LOGGER.info(response.getText());
@@ -53,8 +52,8 @@ public class MonWebServiceTest extends AbstractRemoteIT {
   @Test
   public void testMafonction2() throws IOException, SAXException {
     WebConversation webConversation = new WebConversation();
-    InputStream source = new ByteArrayInputStream("rien".getBytes());
-    GetMethodWebRequest request = new GetMethodWebRequest(deployUrl + "/api/lapp/mafonction2");
+    InputStream source = new ByteArrayInputStream("de fois rien...".getBytes());
+    GetMethodWebRequest request = new GetMethodWebRequest(deployUrl.toString().replace("8080", "9143") + "/api/lapp/mafonction2");
     WebResponse response = webConversation.getResponse(request);
     assertEquals(200,response.getResponseCode());
     LOGGER.info("Json :" + response.getText());
