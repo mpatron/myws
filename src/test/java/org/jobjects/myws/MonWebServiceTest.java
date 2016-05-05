@@ -11,9 +11,11 @@ import java.util.logging.Logger;
 
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jobjects.myws.tools.arquillian.AbstractRemoteIT;
+import org.jobjects.myws.tools.log.JObjectsLogFormatter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.xml.sax.SAXException;
@@ -29,13 +31,15 @@ import com.meterware.httpunit.WebResponse;
 @RunWith(Arquillian.class)
 public class MonWebServiceTest extends AbstractRemoteIT {
 
-  private Logger LOGGER = Logger.getLogger(getClass().getName());
+  private static Logger LOGGER = Logger.getLogger(MonWebServiceTest.class.getName());
 
   @ArquillianResource
   private URL deployUrl;
 
   @Test
   public void testMafonction() throws IOException, SAXException {
+    JObjectsLogFormatter.initializeLogging();
+    LOGGER.info("deployUrl : " + (deployUrl==null?StringUtils.EMPTY:deployUrl.toString()));
     WebConversation webConversation = new WebConversation();
     InputStream source = new ByteArrayInputStream("rien".getBytes());
     PutMethodWebRequest request = new PutMethodWebRequest(deployUrl + "/api/lapp/mafonction?param1=pArAm_1&param2=PaRam_2", source, MediaType.APPLICATION_JSON);

@@ -1,5 +1,9 @@
 package org.jobjects.myws.tools.log;
 
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -10,6 +14,8 @@ import java.util.logging.LogRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.jboss.logmanager.Level;
+import org.junit.BeforeClass;
 
 /**
  * Connecteur JAAS.
@@ -19,6 +25,29 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 public class JObjectsLogFormatter extends Formatter {
   private static final DateFormat format = new SimpleDateFormat("h:mm:ss");
 
+  public static void initializeLogging() {
+    final String filePathnameLogging = "org/jobjects/logging.properties";
+    try {
+      URL url = ClassLoader.getSystemResource(filePathnameLogging);
+      if(url !=null) {
+        Path path=Paths.get(url.toURI());
+        if(Files.isReadable(path)) {
+          System.out.println("before java.util.logging.config.file="+System.getProperty("java.util.logging.config.file"));
+          System.setProperty("java.util.logging.config.file", path.toAbsolutePath().toString());
+          //System.setProperty("java.util.logging.config.file", path.toUri().toString());
+          System.out.println("java.util.logging.config.file="+System.getProperty("java.util.logging.config.file"));
+        } else {
+          System.err.println("Le fichier logging.properties est illisible : "+path.toAbsolutePath());
+        }
+      } else {
+        System.err.println("Le chemin d'accès à logging.properties est introuvable : "+filePathnameLogging);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  
   @Override
   public String format(LogRecord record) {
     String loggerName = record.getLoggerName();

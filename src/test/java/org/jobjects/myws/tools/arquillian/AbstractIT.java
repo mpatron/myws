@@ -1,9 +1,14 @@
 package org.jobjects.myws.tools.arquillian;
 
 import java.io.File;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jboss.logmanager.Level;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -37,6 +42,7 @@ public class AbstractIT {
   }
 
   public static WebArchive createTestableDeployment() {
+    
     PomEquippedResolveStage pom = Maven.resolver().loadPomFromFile("pom.xml");
     File[] commons_lang3 = pom.resolve("org.apache.commons:commons-lang3").withTransitivity().asFile();    
     File[] shrinkwrap_api = pom.resolve("org.jboss.shrinkwrap:shrinkwrap-api").withTransitivity().asFile();
