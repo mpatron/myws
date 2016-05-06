@@ -14,7 +14,7 @@ public class Basket implements Serializable {
     private List<String> items;
     
     @EJB
-    private OrderRepository repo;
+    private UserRepository repo;
     
     public void addItem(String item) {
         items.add(item);

@@ -27,7 +27,7 @@ public class MonWebService {
   private transient Logger LOGGER = Logger.getLogger(getClass().getName());
 
   @Inject
-  OrderRepository orderRepository;
+  UserRepository userRepository;
   
   @Path("/mafonction")
   @PUT
@@ -54,7 +54,7 @@ public class MonWebService {
   @Produces(MediaType.APPLICATION_JSON)
   public Response mafonction2() {
     JsonObjectBuilder json = Json.createObjectBuilder();
-    json.add("retour", ""+(orderRepository!=null));
+    json.add("retour", ""+(userRepository!=null));
     String jsonStr = json.build().toString();
     return Response.ok(jsonStr, MediaType.APPLICATION_JSON).build();
   }

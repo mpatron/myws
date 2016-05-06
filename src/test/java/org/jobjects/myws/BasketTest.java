@@ -22,7 +22,7 @@ public class BasketTest extends AbstractLocalIT {
   Basket basket;
 
   @EJB
-  OrderRepository repo;
+  UserRepository repo;
 
   @Test
   public void place_order_should_add_order() {
