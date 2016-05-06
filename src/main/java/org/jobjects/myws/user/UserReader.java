@@ -36,9 +36,9 @@ public class UserReader implements MessageBodyReader<User> {
       InputStreamReader reader = new InputStreamReader(in, "UTF-8");
       JsonReader jsonReader = Json.createReader(reader);
       JsonObject jsonObject = jsonReader.readObject();
-      user.setEmail(jsonObject.getString("email"));
-      user.setFirstName(jsonObject.getString("firstName"));
-      user.setLastName(jsonObject.getString("lastName"));
+      user.setEmail(jsonObject.getString("email", null));
+      user.setFirstName(jsonObject.getString("firstName", null));
+      user.setLastName(jsonObject.getString("lastName", null));
     } catch (Exception e) {
       throw new WebApplicationException(e);
     }

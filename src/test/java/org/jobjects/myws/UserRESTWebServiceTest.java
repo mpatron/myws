@@ -52,7 +52,7 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
       LOGGER.info("URI : " + webTarget.getUri());
       User user = new User();
       user.setEmail("mpt.softcomputing@gmail.com");
-      user.setFirstName("Mickaël");
+      //user.setFirstName("Mickaël");
       user.setLastName("Patron");
       Response response = webTarget.request().post(Entity.json(user));
       StatusType statusType = response.getStatusInfo();
