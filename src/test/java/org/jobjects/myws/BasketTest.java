@@ -31,20 +31,20 @@ public class BasketTest extends AbstractLocalIT {
     basket.addItem("sunglasses");
     basket.addItem("suit");
     basket.placeOrder();
-    Assert.assertEquals(1, repo.getOrderCount());
+    Assert.assertEquals(1, repo.getUserCount());
     Assert.assertEquals(0, basket.getItemCount());
 
     basket.addItem("raygun");
     basket.addItem("spaceship");
     basket.placeOrder();
-    Assert.assertEquals(2, repo.getOrderCount());
+    Assert.assertEquals(2, repo.getUserCount());
     Assert.assertEquals(0, basket.getItemCount());
   }
 
   @Test
   public void order_should_be_persistent() {
     LOGGER.info(">>>>>>>>>>>>>>>>><<<< order_should_be_persistent...");
-    Assert.assertEquals(2, repo.getOrderCount());
+    Assert.assertEquals(2, repo.getUserCount());
   }
   
  }

@@ -1,9 +1,6 @@
 package org.jobjects.myws.rest;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -38,14 +35,15 @@ public class TrafficLogger implements ContainerRequestFilter, ContainerResponseF
   /*
    * ContainerRequestFilter
    * 
-   * @see javax.ws.rs.container.ContainerRequestFilter#filter(javax.ws.rs.container .ContainerRequestContext)
+   * @see
+   * javax.ws.rs.container.ContainerRequestFilter#filter(javax.ws.rs.container
+   * .ContainerRequestContext)
    */
   public void filter(ContainerRequestContext requestContext) throws IOException {
     try {
       JsonObjectBuilder json = ContainerRequestContextToJSON(requestContext);
       String optionKey = "IN-" + requestContext.getUriInfo().getPath();
       String optionValue = json.build().toString();
-      // histiricalFacade.tracePreWS(userPrincipal, optionKey, optionValue);
 
       LOGGER.log(Level.INFO, "optionKey=" + optionKey + " optionValue=" + optionValue);
 
@@ -57,8 +55,9 @@ public class TrafficLogger implements ContainerRequestFilter, ContainerResponseF
   /*
    * ContainerResponseFilter
    * 
-   * @see javax.ws.rs.container.ContainerResponseFilter#filter(javax.ws.rs.container .ContainerRequestContext,
-   * javax.ws.rs.container.ContainerResponseContext)
+   * @see
+   * javax.ws.rs.container.ContainerResponseFilter#filter(javax.ws.rs.container
+   * .ContainerRequestContext, javax.ws.rs.container.ContainerResponseContext)
    */
   public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
     try {
@@ -67,7 +66,6 @@ public class TrafficLogger implements ContainerRequestFilter, ContainerResponseF
 
       String optionKey = "OUT-" + requestContext.getUriInfo().getPath();
       String optionValue = json.build().toString();
-      // histiricalFacade.tracePreWS(userPrincipal, optionKey, optionValue);
 
       LOGGER.log(Level.INFO, "optionKey=" + optionKey + " optionValue=" + optionValue);
     } catch (Exception e) {
@@ -92,7 +90,13 @@ public class TrafficLogger implements ContainerRequestFilter, ContainerResponseF
         json.add("UriInfo", "" + uriInfo.getRequestUri().toString());
       }
 
-      json.add("BodyRequest", InputStreamToString(requestContext.getEntityStream()));
+      /**
+       * Astuce le stream a déjà été lu par le CustomRequestWrapperFilter et à
+       * mis en mémoire en chaine entityStream. Sans le bug, le code normal
+       * aurait été : json.add("BodyRequest",
+       * InputStreamToString(requestContext.getEntityStream()));
+       */
+      json.add("BodyRequest", (String) requestContext.getProperty(CustomRequestWrapperFilter.ENTITY_STREAM_COPY));
 
       MultivaluedMap<String, String> headers = requestContext.getHeaders();
       JsonObjectBuilder jsonHeaders = Json.createObjectBuilder();
@@ -118,18 +122,25 @@ public class TrafficLogger implements ContainerRequestFilter, ContainerResponseF
     return json;
   }
 
-  private String InputStreamToString(InputStream is) {
-    StringBuilder returnValue = new StringBuilder();
-    try {
-      BufferedReader br = new BufferedReader(new InputStreamReader(is));
-      String line;
-      while ((line = br.readLine()) != null) {
-        returnValue.append(line);
-      }
-    } catch (Exception e) {
-      LOGGER.log(Level.SEVERE, "Internal error.", e);
-    }
-    return returnValue.toString();
-  }
+//  private String InputStreamToString(InputStream is) {
+//    StringBuilder returnValue = new StringBuilder();
+//    try {
+//
+//      if (is.markSupported()) {
+//        is.mark(1024 * 1024);
+//      }
+//      BufferedReader br = new BufferedReader(new InputStreamReader(is));
+//      String line;
+//      while ((line = br.readLine()) != null) {
+//        returnValue.append(line);
+//      }
+//      if (is.markSupported()) {
+//        is.reset();
+//      }
+//    } catch (Exception e) {
+//      LOGGER.log(Level.SEVERE, "Internal error.", e);
+//    }
+//    return returnValue.toString();
+//  }
 
 }

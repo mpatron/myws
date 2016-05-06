@@ -6,7 +6,9 @@ import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import org.jobjects.myws.MonWebService;
+import org.jobjects.myws.UserRESTWebService;
+import org.jobjects.myws.user.UserReader;
+import org.jobjects.myws.user.UserWriter;
 
 /**
  * Dans JEE7, il ne suffit pas de d'utiliser les annotations REST pour le faire
@@ -24,7 +26,10 @@ public class RestApplicationConfiguration extends Application {
   @Override
   public Set<Class<?>> getClasses() {
       Set<Class<?>> s = new HashSet<Class<?>>();
-      s.add(MonWebService.class);
+      s.add(CustomRequestWrapperFilter.class);
+      s.add(UserRESTWebService.class);
+      s.add(UserWriter.class);
+      s.add(UserReader.class);
       s.add(TrafficLogger.class);
       return s;
   }
