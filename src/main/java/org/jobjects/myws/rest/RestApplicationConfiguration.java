@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
+import org.jobjects.myws.email.EMailValidator;
 import org.jobjects.myws.user.UserRESTWebService;
 import org.jobjects.myws.user.UserReader;
 import org.jobjects.myws.user.UserWriter;
@@ -39,7 +40,8 @@ public class RestApplicationConfiguration extends Application {
   @Override
   public Set<Class<?>> getClasses() {
       Set<Class<?>> resources = new HashSet<Class<?>>();
-      resources.add(CustomRequestWrapperFilter.class);
+      resources.add(CustomRequestWrapperFilter.class);      
+      resources.add(EMailValidator.class);
       resources.add(UserRESTWebService.class);
       resources.add(UserWriter.class);
       resources.add(UserReader.class);

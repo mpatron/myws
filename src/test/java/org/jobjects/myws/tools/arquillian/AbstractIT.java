@@ -43,6 +43,7 @@ public class AbstractIT {
     PomEquippedResolveStage pom = Maven.resolver().loadPomFromFile("pom.xml");
     File[] commons_lang3 = pom.resolve("org.apache.commons:commons-lang3").withTransitivity().asFile();
     File[] commons_io = pom.resolve("commons-io:commons-io").withTransitivity().asFile();    
+    File[] swagger_jaxrs = pom.resolve("io.swagger:swagger-jaxrs").withTransitivity().asFile();    
     File[] shrinkwrap_api = pom.resolve("org.jboss.shrinkwrap:shrinkwrap-api").withTransitivity().asFile();
     //File[] active_directory = pom.resolve("com.softcomputing.ad:active-directory").withTransitivity().asFile();
 
@@ -61,6 +62,7 @@ public class AbstractIT {
         //.addAsResource(new File(SOURCES_TEST_RESOURCES_DIR + "/com/softcomputing/rcu/config.properties"), "config.propertiesv")
         .addAsLibraries(commons_lang3)
         .addAsLibraries(commons_io)
+        .addAsLibraries(swagger_jaxrs)
         .addAsLibraries(shrinkwrap_api)
         .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
         /*.addAsLibraries(active_directory)*/;

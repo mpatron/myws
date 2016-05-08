@@ -1,5 +1,6 @@
 package org.jobjects.myws.email;
 
+import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,7 +34,7 @@ public class EMailValidator {
   @GET
   @Path("/{user.email}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response showUser(@PathParam("user.email") String email, @Context SecurityContext securityContext) {
+  public Response isValideEmail(@PathParam("user.email") String email, @Context SecurityContext securityContext) {
     Response returnValue = null;
     try {
       if (validateEmail(email)) {
@@ -69,12 +70,11 @@ public class EMailValidator {
         return true; // if the domain is in the host list then finish
     }
     // now that it is not a common domain
-    // Hashtable<String, String> env = new Hashtable<String,String>();
-    // env.put(Context.INITIAL_CONTEXT_FACTORY,
-    // "com.sun.jndi.dns.DnsContextFactory");
-    // DirContext ictx = new InitialDirContext( env );
     if (!domainRepository.contains(hostname)) {
-      DirContext ictx = new InitialDirContext();
+      Hashtable<String, String> env = new Hashtable<String,String>();
+      env.put(javax.naming.Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.dns.DnsContextFactory");
+      DirContext ictx = new InitialDirContext( env );
+      //DirContext ictx = new InitialDirContext();
       Attributes attrs = ictx.getAttributes(hostname, new String[] { "MX", "A" });
       System.out.println("" + attrs);
       Attribute attr = attrs.get("mx");
