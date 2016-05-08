@@ -7,9 +7,6 @@ import java.lang.reflect.Type;
 import java.util.logging.Logger;
 
 import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonWriter;
 import javax.json.stream.JsonGenerator;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
@@ -44,38 +41,14 @@ public class UserWriter implements MessageBodyWriter<User> {
   @Override
   public void writeTo(User t, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out)
       throws IOException, WebApplicationException {
-    // JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
-    // if (null != t.getEmail())
-    // jsonObjectBuilder.add("email", t.getEmail());
-    // else
-    // jsonObjectBuilder.addNull("email");
-    // if (null != t.getFirstName())
-    // jsonObjectBuilder.add("firstName", t.getFirstName());
-    // else
-    // jsonObjectBuilder.addNull("firstName");
-    // if (null != t.getLastName())
-    // jsonObjectBuilder.add("lastName", t.getLastName());
-    // else
-    // jsonObjectBuilder.addNull("lastName");
-    // JsonObject jsonObject = jsonObjectBuilder.build();
-    // JsonWriter jsonWriter = Json.createWriter(out);
-    // jsonWriter.writeObject(jsonObject);
-
     JsonGenerator gen = Json.createGenerator(out);
     gen.writeStartObject();
     if (null != t.getEmail())
       gen.write("email", t.getEmail());
-//    else
-//      gen.writeNull("email");
-    
     if (null != t.getFirstName())
       gen.write("firstName", t.getFirstName());
-//  else
-//  gen.writeNull("firstName");
     if (null != t.getLastName())
       gen.write("lastName", t.getLastName());
-//    else
-//    gen.writeNull("lastName");
     gen.writeEnd();
     gen.flush();
   }
