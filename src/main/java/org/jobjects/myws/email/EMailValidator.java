@@ -22,6 +22,9 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.jobjects.myws.rest.Tracked;
 
+import io.swagger.annotations.Api;
+
+@Api(value = "/email", description = "Operations about email")
 @Path("/email")
 @RequestScoped
 @Tracked
