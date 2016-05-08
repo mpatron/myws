@@ -63,18 +63,19 @@ public class UserWriter implements MessageBodyWriter<User> {
 
     JsonGenerator gen = Json.createGenerator(out);
     gen.writeStartObject();
-    if (null == t.getEmail())
-      gen.writeNull("email");
-    else
+    if (null != t.getEmail())
       gen.write("email", t.getEmail());
-    if (null == t.getFirstName())
-      gen.writeNull("firstName");
-    else
+//    else
+//      gen.writeNull("email");
+    
+    if (null != t.getFirstName())
       gen.write("firstName", t.getFirstName());
-    if (null == t.getLastName())
-      gen.writeNull("lastName");
-    else
+//  else
+//  gen.writeNull("firstName");
+    if (null != t.getLastName())
       gen.write("lastName", t.getLastName());
+//    else
+//    gen.writeNull("lastName");
     gen.writeEnd();
     gen.flush();
   }

@@ -50,6 +50,7 @@
 		<version.arquillian>1.1.11.Final</version.arquillian>
 		<version.shrinkwrap>2.1.1</version.shrinkwrap>
 		<version.picketbox>4.0.21.Final</version.picketbox>
+		<swagger-version>1.5.8</swagger-version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -94,6 +95,18 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-jaxrs</artifactId>
+			<version>${swagger-version}</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.ws.rs</groupId>
+					<artifactId>jsr311-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.spec</groupId>

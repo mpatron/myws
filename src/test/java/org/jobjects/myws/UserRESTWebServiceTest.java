@@ -6,10 +6,16 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.stream.JsonGenerator;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -28,6 +34,7 @@ import org.junit.runner.RunWith;
 import org.xml.sax.SAXException;
 
 import com.meterware.httpunit.GetMethodWebRequest;
+import com.meterware.httpunit.PostMethodWebRequest;
 import com.meterware.httpunit.PutMethodWebRequest;
 import com.meterware.httpunit.WebConversation;
 import com.meterware.httpunit.WebResponse;
@@ -52,7 +59,7 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
       LOGGER.info("URI : " + webTarget.getUri());
       User user = new User();
       user.setEmail("mpt.softcomputing@gmail.com");
-      //user.setFirstName("Mickaël");
+      // user.setFirstName("Mickaël");
       user.setLastName("Patron");
       Response response = webTarget.request().post(Entity.json(user));
       StatusType statusType = response.getStatusInfo();
@@ -62,18 +69,52 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
         Assert.assertEquals(user.getEmail(), userReturn.getEmail());
         Assert.assertEquals(user.getFirstName(), userReturn.getFirstName());
         Assert.assertEquals(user.getLastName(), userReturn.getLastName());
-        // String p = response.readEntity(String.class);
-        // try (StringReader reader = new StringReader(p)) {
-        // JsonReader jsonReader = Json.createReader(reader);
-        // JsonObject jsonObject = jsonReader.readObject();
-        // returnValue=jsonObject.getBoolean("return");
-        // } catch (Exception e) {
-        // throw e;
-        // }
       } else {
         LOGGER.log(Level.SEVERE, statusType.getReasonPhrase());
         Assert.assertTrue(false);
       }
+    } catch (Exception e) {
+      LOGGER.log(Level.SEVERE, e.getMessage(), e);
+      Assert.fail(e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testCreateUserDirect() {
+    try {
+      User user = new User();
+      user.setEmail("mpt.softcomputing@gmail.com");
+      // user.setFirstName("Mickaël");
+      user.setLastName("Patron");
+
+      LOGGER.info("deployUrl : " + (deployUrl == null ? StringUtils.EMPTY : deployUrl.toString()));
+      WebConversation webConversation = new WebConversation();
+      StringWriter stringWriter = new StringWriter();
+      JsonGenerator gen = Json.createGenerator(stringWriter);
+      gen.writeStartObject().write("lastName", user.getLastName()).write("email", user.getEmail()).writeEnd().flush();
+
+      InputStream source = new ByteArrayInputStream(stringWriter.toString().getBytes());
+      PostMethodWebRequest request = new PostMethodWebRequest(deployUrl.toString().replace("8080", "9143") + "/api/user", source, MediaType.APPLICATION_JSON);
+      LOGGER.info("URL : " + request.getURL());
+      WebResponse response = webConversation.getResponse(request);
+      assertEquals(200, response.getResponseCode());
+      String text = response.getText();
+      LOGGER.info("response=" + text);
+      try (StringReader reader = new StringReader(text)) {
+        JsonReader jsonReader = Json.createReader(reader);
+        JsonObject jsonObject = jsonReader.readObject();
+        User userReturn = new User();
+        userReturn.setEmail(jsonObject.getString("email", null));
+        userReturn.setFirstName(jsonObject.getString("firstName", null));
+        userReturn.setLastName(jsonObject.getString("lastName", null));
+        Assert.assertEquals(user.getEmail(), userReturn.getEmail());
+        Assert.assertEquals(user.getFirstName(), userReturn.getFirstName());
+        Assert.assertEquals(user.getLastName(), userReturn.getLastName());
+      } catch (Exception e) {
+        LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        Assert.fail(e.getLocalizedMessage());
+      }
+      source.close();
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
       Assert.fail(e.getLocalizedMessage());

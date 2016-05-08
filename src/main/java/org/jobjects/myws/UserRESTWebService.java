@@ -23,9 +23,15 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.jobjects.myws.rest.Tracked;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 /**
  * @author Mickaël PATRON 2014
  **/
+@Api(value = "/user", description = "Operations about user")
 @Path("/user")
 @RequestScoped
 @Tracked
@@ -34,7 +40,12 @@ public class UserRESTWebService {
 
   @Inject
   UserRepository userRepository;
-  
+
+  @ApiOperation(value = "Stocker un user.")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "cas nominal."),
+      @ApiResponse(code = 403, message = "Interdiction d'accès."),
+      @ApiResponse(code = 500, message = "Erreur interne.") })
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
@@ -56,6 +67,7 @@ public class UserRESTWebService {
     Response returnValue = null;
     try {
       userRepository.addUser(user);
+      returnValue = Response.ok(user, MediaType.APPLICATION_JSON).build();
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
       returnValue = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -69,29 +81,30 @@ public class UserRESTWebService {
   public Response deleteUser(@PathParam("user.email") String email, @Context SecurityContext securityContext) {
     Response returnValue = null;
     try {
-      userRepository.deleteUser(email);
+      User user = userRepository.deleteUser(email);
+      returnValue = Response.ok(user, MediaType.APPLICATION_JSON).build();
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
       returnValue = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
     return returnValue;
   }
-  
+
   @GET
   @Path("/{user.email}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response showUser(@PathParam("user.email") String email, @Context SecurityContext securityContext) {
     Response returnValue = null;
     try {
-      userRepository.getUser(email);
+      User user = userRepository.getUser(email);
+      returnValue = Response.ok(user, MediaType.APPLICATION_JSON).build();
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
       returnValue = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
     return returnValue;
   }
-  
-  
+
   @Path("/mafonction")
   @PUT
   @Produces(MediaType.APPLICATION_JSON)
@@ -117,10 +130,9 @@ public class UserRESTWebService {
   @Produces(MediaType.APPLICATION_JSON)
   public Response mafonction2() {
     JsonObjectBuilder json = Json.createObjectBuilder();
-    json.add("retour", ""+(userRepository!=null));
+    json.add("retour", "" + (userRepository != null));
     String jsonStr = json.build().toString();
     return Response.ok(jsonStr, MediaType.APPLICATION_JSON).build();
   }
 
-  
 }

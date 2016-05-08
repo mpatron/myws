@@ -10,6 +10,8 @@ import org.jobjects.myws.UserRESTWebService;
 import org.jobjects.myws.user.UserReader;
 import org.jobjects.myws.user.UserWriter;
 
+import io.swagger.jaxrs.config.BeanConfig;
+
 /**
  * Dans JEE7, il ne suffit pas de d'utiliser les annotations REST pour le faire
  * fonctionner. Glassfish est fourni avec Jersey, par la dependency est donc en
@@ -23,14 +25,27 @@ import org.jobjects.myws.user.UserWriter;
  */
 @ApplicationPath("api")
 public class RestApplicationConfiguration extends Application {
+  
+  public RestApplicationConfiguration() {
+    BeanConfig beanConfig = new BeanConfig();
+    beanConfig.setVersion("1.0.2");
+    beanConfig.setSchemes(new String[] { "http" });
+    beanConfig.setHost("localhost:8080");
+    beanConfig.setBasePath("/myws/api");
+    beanConfig.setResourcePackage("org.jobjects.myws");
+    beanConfig.setScan(true);
+  }
+  
   @Override
   public Set<Class<?>> getClasses() {
-      Set<Class<?>> s = new HashSet<Class<?>>();
-      s.add(CustomRequestWrapperFilter.class);
-      s.add(UserRESTWebService.class);
-      s.add(UserWriter.class);
-      s.add(UserReader.class);
-      s.add(TrafficLogger.class);
-      return s;
+      Set<Class<?>> resources = new HashSet<Class<?>>();
+      resources.add(CustomRequestWrapperFilter.class);
+      resources.add(UserRESTWebService.class);
+      resources.add(UserWriter.class);
+      resources.add(UserReader.class);
+      resources.add(TrafficLogger.class);
+      resources.add(io.swagger.jaxrs.listing.ApiListingResource.class);
+      resources.add(io.swagger.jaxrs.listing.SwaggerSerializers.class);
+      return resources;
   }
 }
