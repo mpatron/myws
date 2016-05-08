@@ -15,8 +15,6 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
-import org.jobjects.myws.User;
-
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 public class UserWriter implements MessageBodyWriter<User> {

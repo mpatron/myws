@@ -16,8 +16,6 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.Provider;
 
-import org.jobjects.myws.User;
-
 @Provider
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserReader implements MessageBodyReader<User> {

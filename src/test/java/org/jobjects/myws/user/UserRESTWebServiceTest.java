@@ -1,4 +1,4 @@
-package org.jobjects.myws;
+package org.jobjects.myws.user;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jobjects.myws.tools.arquillian.AbstractRemoteIT;
+import org.jobjects.myws.user.User;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

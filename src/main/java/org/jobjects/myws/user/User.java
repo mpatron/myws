@@ -1,4 +1,4 @@
-package org.jobjects.myws;
+package org.jobjects.myws.user;
 
 import java.io.Serializable;
 
