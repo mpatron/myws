@@ -49,18 +49,12 @@ public class EMailValidator {
     return returnValue;
   }
 
-  public static void main(String[] args) throws NamingException {
-    EMailValidator instance = new EMailValidator();
-    instance.validateEmail("toto@softcomputing.com");
-
-  }
-
   public boolean validateEmail(String email) throws NamingException {
     // string character check
     if (!email.matches("[^@]+@([-\\p{Alnum}]+\\.)*\\p{Alnum}+"))
       throw new NamingException("please check you are using only valid characters in the email address entered.");
     String[] temp = email.split("@");
-    String user = temp[0];
+    //String user = temp[0];
     String hostname = temp[1];
 
     // is it one of the common domains.
