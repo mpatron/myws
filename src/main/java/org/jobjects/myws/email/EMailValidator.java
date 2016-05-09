@@ -68,10 +68,11 @@ public class EMailValidator {
     }
     // now that it is not a common domain
     if (!domainRepository.contains(hostname)) {
-      Hashtable<String, String> env = new Hashtable<String,String>();
-      env.put(javax.naming.Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.dns.DnsContextFactory");
-      DirContext ictx = new InitialDirContext( env );
+//      Hashtable<String, String> env = new Hashtable<String,String>();
+//      env.put(javax.naming.Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.dns.DnsContextFactory");
+//      DirContext ictx = new InitialDirContext( env );
       //DirContext ictx = new InitialDirContext();
+      DirContext ictx = domainRepository.getDirContext();
       Attributes attrs = ictx.getAttributes(hostname, new String[] { "MX", "A" });
       System.out.println("" + attrs);
       Attribute attr = attrs.get("mx");
@@ -85,5 +86,5 @@ public class EMailValidator {
       return true;// we have found records in cash.
     }
   }
-
+  
 }

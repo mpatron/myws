@@ -1,6 +1,7 @@
 package org.jobjects.myws.email;
 
 import javax.ejb.Local;
+import javax.naming.directory.DirContext;
 
 @Local
 public interface DomainRepository {
@@ -11,4 +12,6 @@ public interface DomainRepository {
   boolean contains(String domain);
 
   boolean remove(String domain);
+  
+  DirContext getDirContext();
 }
