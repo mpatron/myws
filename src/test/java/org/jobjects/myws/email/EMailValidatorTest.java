@@ -1,7 +1,5 @@
 package org.jobjects.myws.email;
 
-import static org.junit.Assert.*;
-
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.logging.Level;
@@ -9,7 +7,6 @@ import java.util.logging.Logger;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.StatusType;
@@ -18,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jobjects.myws.tools.arquillian.AbstractRemoteIT;
-import org.jobjects.myws.user.User;
 import org.jobjects.myws.user.UserRESTWebServiceTest;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -38,7 +34,6 @@ public class EMailValidatorTest extends AbstractRemoteIT {
 
   @ArquillianResource
   private URL deployUrl;
-
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
@@ -61,16 +56,16 @@ public class EMailValidatorTest extends AbstractRemoteIT {
     try {
       Client client = ClientBuilder.newClient();
       LOGGER.info("deployUrl : " + (deployUrl == null ? StringUtils.EMPTY : deployUrl.toString()));
-      WebTarget webTarget = client.target(deployUrl.toString().replace("8080", "9143") + "api/email/"+URLEncoder.encode("mpt@softcomputing.com", "UTF-8"));
+      WebTarget webTarget = client.target(deployUrl.toString().replace("8080", "9143") + "api/email/" + URLEncoder.encode("mpt@softcomputing.com", "UTF-8"));
       LOGGER.info("URI : " + webTarget.getUri());
       Response response = webTarget.request().get();
       StatusType statusType = response.getStatusInfo();
       if (Response.Status.Family.SUCCESSFUL.equals(Response.Status.Family.familyOf(statusType.getStatusCode()))) {
         String stringReturn = response.readEntity(String.class);
         LOGGER.info("stringReturn=" + stringReturn);
-//        Assert.assertEquals(user.getEmail(), userReturn.getEmail());
-//        Assert.assertEquals(user.getFirstName(), userReturn.getFirstName());
-//        Assert.assertEquals(user.getLastName(), userReturn.getLastName());
+        // Assert.assertEquals(user.getEmail(), userReturn.getEmail());
+        // Assert.assertEquals(user.getFirstName(), userReturn.getFirstName());
+        // Assert.assertEquals(user.getLastName(), userReturn.getLastName());
       } else {
         LOGGER.log(Level.SEVERE, statusType.getReasonPhrase());
         Assert.assertTrue(false);

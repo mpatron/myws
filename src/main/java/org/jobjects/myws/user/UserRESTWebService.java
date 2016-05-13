@@ -1,5 +1,6 @@
 package org.jobjects.myws.user;
 
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -7,6 +8,10 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -21,6 +26,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jobjects.myws.rest.Tracked;
 
 import io.swagger.annotations.Api;
@@ -42,18 +48,31 @@ public class UserRESTWebService {
   UserRepository userRepository;
 
   @ApiOperation(value = "Stocker un user.")
-  @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "cas nominal."),
-      @ApiResponse(code = 403, message = "Interdiction d'accès."),
+  @ApiResponses(value = { @ApiResponse(code = 200, message = "cas nominal."), @ApiResponse(code = 403, message = "Interdiction d'accès."),
       @ApiResponse(code = 500, message = "Erreur interne.") })
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
+  //@Consumes(MediaType.CHARSET_PARAMETER+"=UTF-8")
   @Produces(MediaType.APPLICATION_JSON)
   public Response createUser(User user, @Context SecurityContext securityContext) {
     Response returnValue = null;
     try {
-      userRepository.addUser(user);
-      returnValue = Response.ok(user, MediaType.APPLICATION_JSON).build();
+      ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+      Validator validator = factory.getValidator();
+      Set<ConstraintViolation<User>> violations = validator.validate(user);
+      StringBuffer sb = new StringBuffer(); 
+      for (ConstraintViolation<User> violation : violations) {
+        sb.append(String.format("%s: %s%n", violation.getPropertyPath(), violation.getMessage()));
+        sb.append(System.lineSeparator());
+      }      
+      if(StringUtils.isEmpty(sb.toString())) {
+        userRepository.addUser(user);
+        returnValue = Response.ok(user, MediaType.APPLICATION_JSON).encoding("UTF-8").build();
+      } else {
+        LOGGER.log(Level.WARNING, sb.toString());
+        returnValue = Response.status(Response.Status.EXPECTATION_FAILED).encoding("UTF-8").entity(sb.toString()).build();
+      }
+
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
       returnValue = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

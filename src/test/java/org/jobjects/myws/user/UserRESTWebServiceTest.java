@@ -20,6 +20,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.StatusType;
@@ -28,7 +29,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jobjects.myws.tools.arquillian.AbstractRemoteIT;
-import org.jobjects.myws.user.User;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,7 +52,36 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
   private URL deployUrl;
 
   @Test
-  public void testCreateUser() throws IOException, SAXException {
+  public void testCreateUserTrue() throws IOException, SAXException {
+    try {
+      Client client = ClientBuilder.newClient();
+      LOGGER.info("deployUrl : " + (deployUrl == null ? StringUtils.EMPTY : deployUrl.toString()));
+      WebTarget webTarget = client.target(deployUrl.toString().replace("8080", "9143") + "api/user");
+      LOGGER.info("URI : " + webTarget.getUri());
+      User user = new User();
+      user.setEmail("mpt.softcomputing@gmail.com");
+      user.setFirstName("Mickaël");
+      user.setLastName("Patron");
+      Response response = webTarget.request().post(Entity.json(user));
+      StatusType statusType = response.getStatusInfo();
+      if (Response.Status.Family.SUCCESSFUL.equals(Response.Status.Family.familyOf(statusType.getStatusCode()))) {
+        User userReturn = response.readEntity(User.class);
+        LOGGER.info("userReturn=" + userReturn);
+        Assert.assertEquals(user.getEmail(), userReturn.getEmail());
+        Assert.assertEquals(user.getFirstName(), userReturn.getFirstName());
+        Assert.assertEquals(user.getLastName(), userReturn.getLastName());
+      } else {
+        LOGGER.log(Level.SEVERE, statusType.getReasonPhrase() + " => " + (response.bufferEntity() ? response.readEntity(String.class) : StringUtils.EMPTY));
+        Assert.assertTrue(false);
+      }
+    } catch (Exception e) {
+      LOGGER.log(Level.SEVERE, e.getMessage(), e);
+      Assert.fail(e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testCreateUserFalse() throws IOException, SAXException {
     try {
       Client client = ClientBuilder.newClient();
       LOGGER.info("deployUrl : " + (deployUrl == null ? StringUtils.EMPTY : deployUrl.toString()));
@@ -67,12 +96,10 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
       if (Response.Status.Family.SUCCESSFUL.equals(Response.Status.Family.familyOf(statusType.getStatusCode()))) {
         User userReturn = response.readEntity(User.class);
         LOGGER.info("userReturn=" + userReturn);
-        Assert.assertEquals(user.getEmail(), userReturn.getEmail());
-        Assert.assertEquals(user.getFirstName(), userReturn.getFirstName());
-        Assert.assertEquals(user.getLastName(), userReturn.getLastName());
-      } else {
-        LOGGER.log(Level.SEVERE, statusType.getReasonPhrase());
         Assert.assertTrue(false);
+      } else {
+        LOGGER.log(Level.SEVERE, statusType.getReasonPhrase() + " => " + (response.bufferEntity() ? response.readEntity(String.class) : StringUtils.EMPTY));
+        Assert.assertTrue(true);
       }
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
@@ -80,27 +107,39 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
     }
   }
 
+  private static String convertStreamToString(java.io.InputStream is, String encoding) {
+    java.util.Scanner s = new java.util.Scanner(is, encoding).useDelimiter("\\A");
+    return s.hasNext() ? s.next() : "";
+  }
+
   @Test
   public void testCreateUserDirect() {
     try {
       User user = new User();
       user.setEmail("mpt.softcomputing@gmail.com");
-      // user.setFirstName("Mickaël");
+      user.setFirstName("Mickaël");
       user.setLastName("Patron");
 
       LOGGER.info("deployUrl : " + (deployUrl == null ? StringUtils.EMPTY : deployUrl.toString()));
       WebConversation webConversation = new WebConversation();
       StringWriter stringWriter = new StringWriter();
       JsonGenerator gen = Json.createGenerator(stringWriter);
-      gen.writeStartObject().write("lastName", user.getLastName()).write("email", user.getEmail()).writeEnd().flush();
+      gen.writeStartObject().write("firstName", user.getFirstName()).write("email", user.getEmail()).writeEnd().flush();
 
-      InputStream source = new ByteArrayInputStream(stringWriter.toString().getBytes());
+      InputStream source = new ByteArrayInputStream(stringWriter.toString().getBytes("UTF-8"));
       PostMethodWebRequest request = new PostMethodWebRequest(deployUrl.toString().replace("8080", "9143") + "/api/user", source, MediaType.APPLICATION_JSON);
+      request.setHeaderField(HttpHeaders.CONTENT_ENCODING, "UTF-8");
       LOGGER.info("URL : " + request.getURL());
       WebResponse response = webConversation.getResponse(request);
       assertEquals(200, response.getResponseCode());
-      String text = response.getText();
-      LOGGER.info("response=" + text);
+
+      String text = convertStreamToString(response.getInputStream(), "UTF-8");
+      /**
+       * Il y a un bug sur WebResponse.getTest et response.getCharacterSet()
+       */
+      // String text = new String(response.getText().getBytes(),"UTF-8");
+
+      LOGGER.info("response=" + text + " " + response.getCharacterSet() + " " + response.getResponseMessage());
       try (StringReader reader = new StringReader(text)) {
         JsonReader jsonReader = Json.createReader(reader);
         JsonObject jsonObject = jsonReader.readObject();
@@ -110,7 +149,8 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
         userReturn.setLastName(jsonObject.getString("lastName", null));
         Assert.assertEquals(user.getEmail(), userReturn.getEmail());
         Assert.assertEquals(user.getFirstName(), userReturn.getFirstName());
-        Assert.assertEquals(user.getLastName(), userReturn.getLastName());
+        Assert.assertNull(userReturn.getLastName()); // !! Non envoyer, c'est le
+                                                     // but du test.
       } catch (Exception e) {
         LOGGER.log(Level.SEVERE, e.getMessage(), e);
         Assert.fail(e.getLocalizedMessage());
