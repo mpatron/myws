@@ -165,7 +165,7 @@ public class CliUtils {
         String line = null;
         while (br.hasNextLine()) {
           line = br.nextLine();
-          output.append(line + System.getProperty("line.separator"));
+          output.append(line + System.lineSeparator());
         }
       } finally {
         br.close();
