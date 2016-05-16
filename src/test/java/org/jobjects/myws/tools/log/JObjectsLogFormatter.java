@@ -71,11 +71,11 @@ public class JObjectsLogFormatter extends Formatter {
     }
 
     if (record.getThrown() != null) {
-      output.append(SystemUtils.LINE_SEPARATOR);
+      output.append(System.lineSeparator());
       output.append(ExceptionUtils.getStackTrace(record.getThrown()));
     }
 
-    output.append(SystemUtils.LINE_SEPARATOR);
+    output.append(System.lineSeparator());
     return output.toString();
   }
 
