@@ -1,7 +1,8 @@
 package org.jobjects.myws.email;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,12 +21,12 @@ import org.apache.commons.lang3.StringUtils;
 public class SingletonDomainRepository implements DomainRepository {
   private transient Logger LOGGER = Logger.getLogger(getClass().getName());
 
-  private LinkedList<String> domains;
+  private Collection<String> domains;
   private DirContext dirContext;
 
   @PostConstruct
   void initialize() {
-    domains = new LinkedList<String>();
+    domains = new HashSet<String>();
 
     try {
       Hashtable<String, String> env = new Hashtable<String, String>();

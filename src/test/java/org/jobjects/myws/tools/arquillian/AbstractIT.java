@@ -1,16 +1,12 @@
 package org.jobjects.myws.tools.arquillian;
 
 import java.io.File;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.StringUtils;
-import org.jboss.shrinkwrap.api.ArchivePath;
-import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
@@ -20,7 +16,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.PomEquippedResolveStage;
 import org.jboss.shrinkwrap.resolver.api.maven.ScopeType;
-import org.jobjects.myws.tools.log.JObjectsLogFormatter;
 import org.jobjects.myws.tools.wildfly.CliUtils;
 
 /**
@@ -35,27 +30,26 @@ public class AbstractIT {
   public static final String SOURCES_TEST_JAVA_DIR = "src/test/java";
   public static final String SOURCES_TEST_RESOURCES_DIR = "src/test/resources";
 
-//  public static class MyFilter implements Filter<ArchivePath> {
-//
-//    public MyFilter() {      
-//    }
-//    
-//    @Override
-//    public boolean include(ArchivePath archivePath) {
-//      boolean returnValue=!StringUtils.endsWith(archivePath.get(), "Test.class")
-//          && !StringUtils.startsWith(archivePath.get(), "org/jobjects/myws/tools/arquillian");
-//      //if(returnValue)
-//        LOGGER.finest("archivePath:" + archivePath.get() +" "+returnValue);
-//      return returnValue;
-//    }
-//
-//  }
+  // public static class MyFilter implements Filter<ArchivePath> {
+  //
+  // public MyFilter() {
+  // }
+  //
+  // @Override
+  // public boolean include(ArchivePath archivePath) {
+  // boolean returnValue=!StringUtils.endsWith(archivePath.get(), "Test.class")
+  // && !StringUtils.startsWith(archivePath.get(),
+  // "org/jobjects/myws/tools/arquillian");
+  // //if(returnValue)
+  // LOGGER.finest("archivePath:" + archivePath.get() +" "+returnValue);
+  // return returnValue;
+  // }
+  //
+  // }
 
   public static WebArchive createTestableDeployment() {
     WebArchive war = null;
     try {
-      JObjectsLogFormatter.initializeLogging();
-
       war = ShrinkWrap.create(WebArchive.class);
       war.addAsWebResource(new File("src/main/webapp/index.html"), "index.html");
       addStandardFileInWebInfResource(war);
@@ -67,7 +61,6 @@ public class AbstractIT {
       // File[] commons_lang3 =
       // pom.resolve("org.apache.commons:commons-lang3").withTransitivity().asFile();
       // war.addAsLibraries(commons_lang3);
-
       addAllPackages(war, "org.jobjects", new File(SOURCES_MAIN_JAVA_DIR + "/org/jobjects"));
       addAllResources(war, SOURCES_MAIN_RESOURCES_DIR);
       addAllPackages(war, "org.jobjects", new File(SOURCES_TEST_JAVA_DIR + "/org/jobjects"));
@@ -94,11 +87,19 @@ public class AbstractIT {
    */
   protected static void addAllPackages(WebArchive war, String prefix, File dir) {
     LOGGER.fine("Package add:" + prefix);
-    // war.addPackage(prefix);    
-    //war.addPackages(false, Filters.exclude("(.*Test.class)|(.*"+StringUtils.replace(AbstractIT.class.getPackage().getName(), ".", "\\.")+".*class)"), prefix);
-    //war.addPackages(false, Filters.exclude("(.*)Test.class|^"+StringUtils.replace(AbstractIT.class.getPackage().getName(), ".", String.valueOf(File.separatorChar))+"(.*)"), prefix);
-    //war.addPackages(false, Filters.exclude("(.*)Test.class|"+AbstractIT.class.getPackage().getName()+"(.*)"), prefix);
-    //war.addPackages(false, Filters.exclude("(.*)Test.class|"+AbstractIT.class.getPackage().getName()+"(.*)"), prefix);
+    // war.addPackage(prefix);
+    // war.addPackages(false,
+    // Filters.exclude("(.*Test.class)|(.*"+StringUtils.replace(AbstractIT.class.getPackage().getName(),
+    // ".", "\\.")+".*class)"), prefix);
+    // war.addPackages(false,
+    // Filters.exclude("(.*)Test.class|^"+StringUtils.replace(AbstractIT.class.getPackage().getName(),
+    // ".", String.valueOf(File.separatorChar))+"(.*)"), prefix);
+    // war.addPackages(false,
+    // Filters.exclude("(.*)Test.class|"+AbstractIT.class.getPackage().getName()+"(.*)"),
+    // prefix);
+    // war.addPackages(false,
+    // Filters.exclude("(.*)Test.class|"+AbstractIT.class.getPackage().getName()+"(.*)"),
+    // prefix);
     war.addPackages(false, Filters.exclude(CliUtils.class.getPackage()), prefix);
     for (File file : dir.listFiles()) {
       if (file.isDirectory()) {
@@ -152,18 +153,11 @@ public class AbstractIT {
     // war.addAsWebInfResource(new File(SOURCES_TEST_RESOURCES_DIR +
     // "/jboss-ejb3.xml"), "jboss-ejb3.xml")
     try {
-      URL urlResource = ClassLoader.getSystemResource(resource);
-      if (false /* urlResource == null */) {
-        LOGGER.warning("Resource : " + resource + " is not found.");
+      Path pathResource = Paths.get(new File(resource).toURI());
+      if (Files.isReadable(pathResource)) {
+        war.addAsWebInfResource(pathResource.toFile(), resourceName);
       } else {
-        // Path pathResource = Paths.get(urlResource.toURI());
-        Path pathResource = Paths.get(new File(resource).toURI());
-
-        if (Files.isReadable(pathResource)) {
-          war.addAsWebInfResource(pathResource.toFile(), resourceName);
-        } else {
-          LOGGER.config("Resource : " + resource + " is not readable.");
-        }
+        LOGGER.config("Resource : " + resource + " is not readable.");
       }
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getLocalizedMessage(), e);

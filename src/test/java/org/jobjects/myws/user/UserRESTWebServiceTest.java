@@ -71,7 +71,8 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
         Assert.assertEquals(user.getFirstName(), userReturn.getFirstName());
         Assert.assertEquals(user.getLastName(), userReturn.getLastName());
       } else {
-        LOGGER.log(Level.SEVERE, statusType.getReasonPhrase() + " => " + (response.bufferEntity() ? response.readEntity(String.class) : StringUtils.EMPTY));
+        LOGGER.log(Level.SEVERE,
+            statusType.getReasonPhrase() + " => " + (response.bufferEntity() ? response.readEntity(String.class) : StringUtils.EMPTY));
         Assert.assertTrue(false);
       }
     } catch (Exception e) {
@@ -98,7 +99,8 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
         LOGGER.info("userReturn=" + userReturn);
         Assert.assertTrue(false);
       } else {
-        LOGGER.log(Level.SEVERE, statusType.getReasonPhrase() + " => " + (response.bufferEntity() ? response.readEntity(String.class) : StringUtils.EMPTY));
+        LOGGER.log(Level.SEVERE,
+            statusType.getReasonPhrase() + " => " + (response.bufferEntity() ? response.readEntity(String.class) : StringUtils.EMPTY));
         Assert.assertTrue(true);
       }
     } catch (Exception e) {
@@ -108,6 +110,7 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
   }
 
   private static String convertStreamToString(java.io.InputStream is, String encoding) {
+    @SuppressWarnings("resource")
     java.util.Scanner s = new java.util.Scanner(is, encoding).useDelimiter("\\A");
     return s.hasNext() ? s.next() : "";
   }
@@ -127,7 +130,8 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
       gen.writeStartObject().write("firstName", user.getFirstName()).write("email", user.getEmail()).writeEnd().flush();
 
       InputStream source = new ByteArrayInputStream(stringWriter.toString().getBytes("UTF-8"));
-      PostMethodWebRequest request = new PostMethodWebRequest(deployUrl.toString().replace("8080", "9143") + "/api/user", source, MediaType.APPLICATION_JSON);
+      PostMethodWebRequest request = new PostMethodWebRequest(deployUrl.toString().replace("8080", "9143") + "/api/user", source,
+          MediaType.APPLICATION_JSON);
       request.setHeaderField(HttpHeaders.CONTENT_ENCODING, "UTF-8");
       LOGGER.info("URL : " + request.getURL());
       WebResponse response = webConversation.getResponse(request);
@@ -168,8 +172,9 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
       LOGGER.info("deployUrl : " + (deployUrl == null ? StringUtils.EMPTY : deployUrl.toString()));
       WebConversation webConversation = new WebConversation();
       InputStream source = new ByteArrayInputStream("une fois rien...".getBytes());
-      PutMethodWebRequest request = new PutMethodWebRequest(deployUrl.toString().replace("8080", "9143") + "/api/user/mafonction?param1=pArAm_1&param2=PaRam_2",
-          source, MediaType.APPLICATION_JSON);
+      PutMethodWebRequest request = new PutMethodWebRequest(
+          deployUrl.toString().replace("8080", "9143") + "/api/user/mafonction?param1=pArAm_1&param2=PaRam_2", source,
+          MediaType.APPLICATION_JSON);
       LOGGER.info("URL : " + request.getURL());
       WebResponse response = webConversation.getResponse(request);
       assertEquals(200, response.getResponseCode());
