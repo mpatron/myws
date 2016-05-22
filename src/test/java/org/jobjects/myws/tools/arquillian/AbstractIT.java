@@ -54,6 +54,7 @@ public class AbstractIT {
       war.addAsWebResource(new File("src/main/webapp/index.html"), "index.html");
       addStandardFileInWebInfResource(war);
       war.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+      war.addAsManifestResource(new File(SOURCES_MAIN_RESOURCES_DIR + "/META-INF/persistence.xml"), "persistence.xml");
 
       PomEquippedResolveStage pom = Maven.resolver().loadPomFromFile("pom.xml");
       File[] libs = pom.importDependencies(ScopeType.COMPILE).resolve().withTransitivity().asFile();

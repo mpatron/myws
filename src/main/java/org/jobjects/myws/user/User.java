@@ -2,11 +2,24 @@ package org.jobjects.myws.user;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class User implements Serializable {
+import org.jobjects.myws.orm.AbstractUUIDBaseEntity;
+
+@Entity
+@NamedQueries({
+  @NamedQuery(name = User.FIND_BY_FIRSTNAME, query = "select t from User t where t.firstName = ?1" /*"select t from User t where t.firstName = :firstName"*/),
+  @NamedQuery(name = User.FIND_BY_EMAIL, query = "select t from User t where t.email = ?1") })
+public class User extends AbstractUUIDBaseEntity implements Serializable {
+  
+  public final static String FIND_BY_FIRSTNAME = "User.findByFirstName";
+  public final static String FIND_BY_EMAIL = "User.findByEmail";
+  
   /**
    * 
    */
@@ -18,13 +31,13 @@ public class User implements Serializable {
   @Size(min = 2, max = 20, message = "La longueur du prénom est comprise entre 2 et 20 caractères.")
   @NotNull
   private String firstName;
-  
+
   @Size(max = 20, message = "La longueur du nom est inférieur à 20 caractères.")
   private String lastName;
 
   @Size(max = 320)
   @NotNull
-  @Pattern(regexp="^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)+$")
+  @Pattern(regexp = "^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)+$")
   private String email;
 
   /**
