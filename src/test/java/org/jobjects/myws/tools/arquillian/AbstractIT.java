@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Filter;
+import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -20,6 +21,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.PomEquippedResolveStage;
 import org.jboss.shrinkwrap.resolver.api.maven.ScopeType;
 import org.jobjects.myws.tools.log.JObjectsLogFormatter;
+import org.jobjects.myws.tools.wildfly.CliUtils;
 
 /**
  * @author Mickael Patron 2015
@@ -33,21 +35,21 @@ public class AbstractIT {
   public static final String SOURCES_TEST_JAVA_DIR = "src/test/java";
   public static final String SOURCES_TEST_RESOURCES_DIR = "src/test/resources";
 
-  public static class MyFilter implements Filter<ArchivePath> {
-
-    public MyFilter() {      
-    }
-    
-    @Override
-    public boolean include(ArchivePath archivePath) {
-      boolean returnValue=!StringUtils.endsWith(archivePath.get(), "Test.class")
-          && !StringUtils.startsWith(archivePath.get(), "org/jobjects/myws/tools/arquillian");
-      //if(returnValue)
-        LOGGER.finest("archivePath:" + archivePath.get() +" "+returnValue);
-      return returnValue;
-    }
-
-  }
+//  public static class MyFilter implements Filter<ArchivePath> {
+//
+//    public MyFilter() {      
+//    }
+//    
+//    @Override
+//    public boolean include(ArchivePath archivePath) {
+//      boolean returnValue=!StringUtils.endsWith(archivePath.get(), "Test.class")
+//          && !StringUtils.startsWith(archivePath.get(), "org/jobjects/myws/tools/arquillian");
+//      //if(returnValue)
+//        LOGGER.finest("archivePath:" + archivePath.get() +" "+returnValue);
+//      return returnValue;
+//    }
+//
+//  }
 
   public static WebArchive createTestableDeployment() {
     WebArchive war = null;
@@ -72,7 +74,7 @@ public class AbstractIT {
 
       war.as(ZipExporter.class).exportTo(new File("target/myPackage.war"), true);
 
-      LOGGER.fine("==> War name :" + war.toString(Formatters.VERBOSE));
+      LOGGER.config("==> War name :" + war.toString(Formatters.VERBOSE));
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getLocalizedMessage(), e);
     }
@@ -92,8 +94,12 @@ public class AbstractIT {
    */
   protected static void addAllPackages(WebArchive war, String prefix, File dir) {
     LOGGER.fine("Package add:" + prefix);
-    // war.addPackage(prefix);
-    war.addPackages(false, new MyFilter(), prefix);
+    // war.addPackage(prefix);    
+    //war.addPackages(false, Filters.exclude("(.*Test.class)|(.*"+StringUtils.replace(AbstractIT.class.getPackage().getName(), ".", "\\.")+".*class)"), prefix);
+    //war.addPackages(false, Filters.exclude("(.*)Test.class|^"+StringUtils.replace(AbstractIT.class.getPackage().getName(), ".", String.valueOf(File.separatorChar))+"(.*)"), prefix);
+    //war.addPackages(false, Filters.exclude("(.*)Test.class|"+AbstractIT.class.getPackage().getName()+"(.*)"), prefix);
+    //war.addPackages(false, Filters.exclude("(.*)Test.class|"+AbstractIT.class.getPackage().getName()+"(.*)"), prefix);
+    war.addPackages(false, Filters.exclude(CliUtils.class.getPackage()), prefix);
     for (File file : dir.listFiles()) {
       if (file.isDirectory()) {
         addAllPackages(war, prefix + "." + file.getName(), file);
