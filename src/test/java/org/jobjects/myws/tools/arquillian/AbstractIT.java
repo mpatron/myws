@@ -1,6 +1,11 @@
 package org.jobjects.myws.tools.arquillian;
 
 import java.io.File;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +18,7 @@ import org.jboss.shrinkwrap.api.formatter.Formatters;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.PomEquippedResolveStage;
+import org.jboss.shrinkwrap.resolver.api.maven.ScopeType;
 import org.jobjects.myws.tools.log.JObjectsLogFormatter;
 
 /**
@@ -27,61 +33,49 @@ public class AbstractIT {
   public static final String SOURCES_TEST_JAVA_DIR = "src/test/java";
   public static final String SOURCES_TEST_RESOURCES_DIR = "src/test/resources";
 
-  private static class MyFilter implements Filter<ArchivePath> {
+  public static class MyFilter implements Filter<ArchivePath> {
 
+    public MyFilter() {      
+    }
+    
     @Override
     public boolean include(ArchivePath archivePath) {
-      LOGGER.fine("archivePath:" + archivePath.get());
-      return !StringUtils.endsWith(archivePath.get(), "Test.class") && !StringUtils.startsWith(archivePath.get(), "org/jobjects/myws/tools/arquillian");
+      boolean returnValue=!StringUtils.endsWith(archivePath.get(), "Test.class")
+          && !StringUtils.startsWith(archivePath.get(), "org/jobjects/myws/tools/arquillian");
+      //if(returnValue)
+        LOGGER.finest("archivePath:" + archivePath.get() +" "+returnValue);
+      return returnValue;
     }
 
   }
 
   public static WebArchive createTestableDeployment() {
-    JObjectsLogFormatter.initializeLogging();
+    WebArchive war = null;
+    try {
+      JObjectsLogFormatter.initializeLogging();
 
-    PomEquippedResolveStage pom = Maven.resolver().loadPomFromFile("pom.xml");
-    File[] commons_lang3 = pom.resolve("org.apache.commons:commons-lang3").withTransitivity().asFile();
-    File[] commons_io = pom.resolve("commons-io:commons-io").withTransitivity().asFile();
-    File[] swagger_jaxrs = pom.resolve("io.swagger:swagger-jaxrs").withTransitivity().asFile();
-    File[] shrinkwrap_api = pom.resolve("org.jboss.shrinkwrap:shrinkwrap-api").withTransitivity().asFile();
-    // File[] active_directory =
-    // pom.resolve("com.softcomputing.ad:active-directory").withTransitivity().asFile();
+      war = ShrinkWrap.create(WebArchive.class);
+      war.addAsWebResource(new File("src/main/webapp/index.html"), "index.html");
+      addStandardFileInWebInfResource(war);
+      war.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
-    WebArchive war = ShrinkWrap.create(WebArchive.class).addAsWebResource(new File("src/main/webapp/index.html"), "index.html")
-        // .addAsWebInfResource(new File(SOURCES_TEST_RESOURCES_DIR +
-        // "/jboss-ejb3.xml"), "jboss-ejb3.xml")
-        // .addAsWebInfResource(new File(SOURCES_MAIN_WEB_DIR +
-        // "/WEB-INF/jboss-web.xml"), "jboss-web.xml")
-        .addAsWebInfResource(new File(SOURCES_MAIN_WEB_DIR + "/WEB-INF/beans.xml"), "beans.xml")
-        .addAsWebInfResource(new File(SOURCES_MAIN_WEB_DIR + "/WEB-INF/web.xml"), "web.xml")
-        // .addAsWebInfResource(new File(SOURCES_MAIN_WEB_DIR +
-        // "/WEB-INF/faces-config.xml"), "faces-config.xml")
-        .addAsWebInfResource(new File(SOURCES_MAIN_WEB_DIR + "/WEB-INF/ejb-jar.xml"), "ejb-jar.xml")
-        // .addAsWebInfResource(new File(SOURCES_MAIN_WEB_DIR +
-        // "/WEB-INF/jboss-deployment-structure.xml"),
-        // "jboss-deployment-structure.xml")
-        // .addAsManifestResource(new File(SOURCES_MAIN_WEB_DIR +
-        // "/META-INF/MANIFEST.MF"), "MANIFEST.MF")
-        // .addAsResource(new File(SOURCES_TEST_RESOURCES_DIR +
-        // "/com/softcomputing/rcu/config.properties"), "config.propertiesv")
-        .addAsLibraries(commons_lang3).addAsLibraries(commons_io).addAsLibraries(swagger_jaxrs).addAsLibraries(shrinkwrap_api)
-        .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
-    /* .addAsLibraries(active_directory) */;
+      PomEquippedResolveStage pom = Maven.resolver().loadPomFromFile("pom.xml");
+      File[] libs = pom.importDependencies(ScopeType.COMPILE).resolve().withTransitivity().asFile();
+      war.addAsLibraries(libs);
+      // File[] commons_lang3 =
+      // pom.resolve("org.apache.commons:commons-lang3").withTransitivity().asFile();
+      // war.addAsLibraries(commons_lang3);
 
-    // war.addPackages(false, new MyFilter(), "org.jobjects.myws");
-    // war.addPackages(false, new MyFilter(), "org.jobjects.myws.rest");
-    // war.addPackages(false, new MyFilter(), "org.jobjects.myws.tools.log");
-    // war.addPackages(false, new MyFilter(),
-    // "org.jobjects.myws.tools.wildfly");
-    addAllPackages(war, "org.jobjects", new File(SOURCES_MAIN_JAVA_DIR + "/org/jobjects"));
-    addAllResources(war, SOURCES_MAIN_RESOURCES_DIR);
-    addAllPackages(war, "org.jobjects", new File(SOURCES_TEST_JAVA_DIR + "/org/jobjects"));
-    // addAllResources(jar, RESOURCES_DIR);
+      addAllPackages(war, "org.jobjects", new File(SOURCES_MAIN_JAVA_DIR + "/org/jobjects"));
+      addAllResources(war, SOURCES_MAIN_RESOURCES_DIR);
+      addAllPackages(war, "org.jobjects", new File(SOURCES_TEST_JAVA_DIR + "/org/jobjects"));
 
-    war.as(ZipExporter.class).exportTo(new File("target/myPackage.war"), true);
+      war.as(ZipExporter.class).exportTo(new File("target/myPackage.war"), true);
 
-    LOGGER.fine("==> War name :" + war.toString(Formatters.VERBOSE));
+      LOGGER.fine("==> War name :" + war.toString(Formatters.VERBOSE));
+    } catch (Exception e) {
+      LOGGER.log(Level.SEVERE, e.getLocalizedMessage(), e);
+    }
 
     return war;
   }
@@ -136,6 +130,39 @@ public class AbstractIT {
       LOGGER.fine("Ressource add:" + prefix + dir.getName());
       war.addAsResource(dir, prefix + dir.getName());
     }
+  }
+
+  protected static void addStandardFileInWebInfResource(WebArchive war) {
+    addFileInWebInfResource(war, SOURCES_MAIN_WEB_DIR + "/WEB-INF/beans.xml", "beans.xml");
+    addFileInWebInfResource(war, SOURCES_MAIN_WEB_DIR + "/WEB-INF/web.xml", "web.xml");
+    addFileInWebInfResource(war, SOURCES_MAIN_WEB_DIR + "/WEB-INF/ejb-jar.xml", "ejb-jar.xml");
+    addFileInWebInfResource(war, SOURCES_MAIN_WEB_DIR + "/WEB-INF/faces-config.xml", "faces-config.xml");
+    addFileInWebInfResource(war, SOURCES_TEST_RESOURCES_DIR + "/jboss-ejb3.xml", "jboss-ejb3.xml");
+    addFileInWebInfResource(war, SOURCES_MAIN_WEB_DIR + "/WEB-INF/jboss-web.xml", "jboss-web.xml");
+    addFileInWebInfResource(war, SOURCES_MAIN_WEB_DIR + "/WEB-INF/jboss-deployment-structure.xml", "jboss-deployment-structure.xml");
+  }
+
+  protected static void addFileInWebInfResource(WebArchive war, String resource, String resourceName) {
+    // war.addAsWebInfResource(new File(SOURCES_TEST_RESOURCES_DIR +
+    // "/jboss-ejb3.xml"), "jboss-ejb3.xml")
+    try {
+      URL urlResource = ClassLoader.getSystemResource(resource);
+      if (false /* urlResource == null */) {
+        LOGGER.warning("Resource : " + resource + " is not found.");
+      } else {
+        // Path pathResource = Paths.get(urlResource.toURI());
+        Path pathResource = Paths.get(new File(resource).toURI());
+
+        if (Files.isReadable(pathResource)) {
+          war.addAsWebInfResource(pathResource.toFile(), resourceName);
+        } else {
+          LOGGER.config("Resource : " + resource + " is not readable.");
+        }
+      }
+    } catch (Exception e) {
+      LOGGER.log(Level.SEVERE, e.getLocalizedMessage(), e);
+    }
+
   }
 
 }
