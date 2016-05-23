@@ -13,7 +13,7 @@ import org.jobjects.myws.orm.AbstractUUIDBaseEntity;
 
 @Entity
 @NamedQueries({
-  @NamedQuery(name = User.FIND_BY_FIRSTNAME, query = "select t from User t where t.firstName = ?1" /*"select t from User t where t.firstName = :firstName"*/),
+  @NamedQuery(name = User.FIND_BY_FIRSTNAME, query = "select t from User t where t.firstName = :firstName"),
   @NamedQuery(name = User.FIND_BY_EMAIL, query = "select t from User t where t.email = ?1") })
 public class User extends AbstractUUIDBaseEntity implements Serializable {
   

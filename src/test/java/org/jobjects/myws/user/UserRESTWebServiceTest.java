@@ -59,7 +59,7 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
       WebTarget webTarget = client.target(deployUrl.toString().replace("8080", "9143") + "api/user");
       LOGGER.info("URI : " + webTarget.getUri());
       User user = new User();
-      user.setEmail("mpt.softcomputing@gmail.com");
+      user.setEmail("mpt@gmail.com");
       user.setFirstName("Mickaël");
       user.setLastName("Patron");
       Response response = webTarget.request().post(Entity.json(user));
@@ -89,7 +89,7 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
       WebTarget webTarget = client.target(deployUrl.toString().replace("8080", "9143") + "api/user");
       LOGGER.info("URI : " + webTarget.getUri());
       User user = new User();
-      user.setEmail("mpt.softcomputing@gmail.com");
+      user.setEmail("mpt@gmail.com");
       // user.setFirstName("Mickaël");
       user.setLastName("Patron");
       Response response = webTarget.request().post(Entity.json(user));
@@ -119,7 +119,7 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
   public void testCreateUserDirect() {
     try {
       User user = new User();
-      user.setEmail("mpt.softcomputing@gmail.com");
+      user.setEmail("mpt@gmail.com");
       user.setFirstName("Mickaël");
       user.setLastName("Patron");
 

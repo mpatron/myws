@@ -14,7 +14,7 @@ public interface Facade<T> {
 
 	public abstract List<T> findAll();
 
-	public abstract List<T> findRange(int[] range);
+	public abstract List<T> findRange(int rangeMin, int rangeMax);
 
 	public abstract long count();
 	

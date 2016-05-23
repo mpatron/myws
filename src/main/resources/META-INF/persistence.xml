@@ -7,5 +7,8 @@
 		transaction-type="JTA" >
 		<properties>
 			<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+			<property name="javax.persistence.schema-generation.scripts.action" value="drop-and-create"/>
+			<property name="javax.persistence.schema-generation.scripts.drop-target" value="conf/db/drop-schema.sql"/>
+			<property name="javax.persistence.schema-generation.scripts.create-target" value="conf/db/create-schema.sql"/>
 		</properties></persistence-unit>
 </persistence>

@@ -141,13 +141,13 @@ public abstract class AbstractFacade<T> implements Facade<T> {
 	 * @see org.jobjects.orm.tools.Facade#findRange(int[])
 	 */
 	@Override
-	public List<T> findRange(int[] range) {
+	public List<T> findRange(int rangeMin, int rangeMax) {
 		CriteriaQuery<T> cq = getEntityManager().getCriteriaBuilder()
 				.createQuery(entityClass);
 		cq.select(cq.from(entityClass));
 		TypedQuery<T> q = getEntityManager().createQuery(cq);
-		q.setMaxResults(range[1] - range[0]);
-		q.setFirstResult(range[0]);
+		q.setMaxResults(rangeMax - rangeMin);
+		q.setFirstResult(rangeMin);
 		return q.getResultList();
 	}
 
