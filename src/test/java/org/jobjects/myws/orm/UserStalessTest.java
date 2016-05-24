@@ -1,6 +1,7 @@
 package org.jobjects.myws.orm;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 
@@ -8,11 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jobjects.myws.tools.arquillian.AbstractLocalIT;
 import org.jobjects.myws.user.User;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -20,27 +17,14 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class UserStalessTest extends AbstractLocalIT {
 
+  private Logger LOGGER = Logger.getLogger(getClass().getName());
+
   @EJB
   UserFacade userFacade;
 
-  @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
-  }
-
-  @AfterClass
-  public static void tearDownAfterClass() throws Exception {
-  }
-
-  @Before
-  public void setUp() throws Exception {
-  }
-
-  @After
-  public void tearDown() throws Exception {
-  }
-
   @Test
   public void testCreate() {
+    LOGGER.info("public void testCreate()");
     User user = new User();
     user.setEmail("mpt@gmail.com");
     user.setFirstName("Mickaël");
@@ -57,6 +41,7 @@ public class UserStalessTest extends AbstractLocalIT {
 
   @Test
   public void testSave() {
+    LOGGER.info("public void testSave()");
     List<User> users = userFacade.findByFirstName("Mickaël");
     if (users.size() > 0) {
       for (User user : users) {
@@ -91,6 +76,7 @@ public class UserStalessTest extends AbstractLocalIT {
 
   @Test
   public void testRemove() {
+    LOGGER.info("public void testRemove()");
     List<User> users = userFacade.findByFirstName("Mickaël");
     if (users.size() > 0) {
       for (User user : users) {
@@ -111,6 +97,7 @@ public class UserStalessTest extends AbstractLocalIT {
 
   @Test
   public void testFind() {
+    LOGGER.info("public void testFind()");
     List<User> users = userFacade.findByFirstName("Mickaël");
     if (users.size() > 0) {
       for (User user : users) {
@@ -132,6 +119,7 @@ public class UserStalessTest extends AbstractLocalIT {
 
   @Test
   public void testFindAll() {
+    LOGGER.info("public void testFindAll()");
     List<User> users = userFacade.findAll();
     if (users.size() > 0) {
       for (User user : users) {
@@ -153,6 +141,7 @@ public class UserStalessTest extends AbstractLocalIT {
 
   @Test
   public void testFindRange() {
+    LOGGER.info("public void testFindRange()");
     List<User> users = userFacade.findRange(0, Integer.MAX_VALUE);
     if (users.size() > 0) {
       for (User user : users) {
@@ -174,6 +163,7 @@ public class UserStalessTest extends AbstractLocalIT {
 
   @Test
   public void testCount() {
+    LOGGER.info("public void testCount()");
     List<User> users = userFacade.findAll();
     if (users.size() > 0) {
       Assert.assertTrue(true);
@@ -190,6 +180,7 @@ public class UserStalessTest extends AbstractLocalIT {
 
   @Test
   public void testFindByNamedQuery() {
+    LOGGER.info("public void testFindByNamedQuery()");
     List<User> users = userFacade.findByNamedQuery(User.FIND_BY_EMAIL, "mpt@gmail.com");
     if (users.size() > 0) {
       for (User user : users) {

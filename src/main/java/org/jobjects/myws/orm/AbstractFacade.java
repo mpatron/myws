@@ -128,7 +128,6 @@ public abstract class AbstractFacade<T> implements Facade<T> {
 	 */
 	@Override
 	public List<T> findAll() {
-		System.out.println("findAll");
 		CriteriaQuery<T> cq = getEntityManager().getCriteriaBuilder()
 				.createQuery(entityClass);
 		cq.select(cq.from(entityClass));
