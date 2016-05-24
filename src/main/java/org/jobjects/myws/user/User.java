@@ -3,8 +3,10 @@ package org.jobjects.myws.user;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.Index;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -12,14 +14,19 @@ import javax.validation.constraints.Size;
 import org.jobjects.myws.orm.AbstractUUIDBaseEntity;
 
 @Entity
+@Table(
+    name = "USERS",
+    indexes = {
+        @Index(name = "idx_users_email", columnList = "email", unique = true),
+        @Index(name = "idx_users_names", columnList = "firstName,lastName", unique = false) })
 @NamedQueries({
-  @NamedQuery(name = User.FIND_BY_FIRSTNAME, query = "select t from User t where t.firstName = :firstName"),
-  @NamedQuery(name = User.FIND_BY_EMAIL, query = "select t from User t where t.email = ?1") })
+    @NamedQuery(name = User.FIND_BY_FIRSTNAME, query = "select t from User t where t.firstName = :firstName"),
+    @NamedQuery(name = User.FIND_BY_EMAIL, query = "select t from User t where t.email = ?1") })
 public class User extends AbstractUUIDBaseEntity implements Serializable {
-  
+
   public final static String FIND_BY_FIRSTNAME = "User.findByFirstName";
   public final static String FIND_BY_EMAIL = "User.findByEmail";
-  
+
   /**
    * 
    */
