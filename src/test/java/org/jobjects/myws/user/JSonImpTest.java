@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +23,7 @@ import org.junit.Test;
 public class JSonImpTest {
   private static Logger LOGGER = Logger.getLogger(JSonImpTest.class.getName());
 
-  private static List<User> users = new ArrayList<>();
+  private static List<User> users = Collections.synchronizedList(new ArrayList<>());
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
@@ -59,7 +60,7 @@ public class JSonImpTest {
 
   @Test
   public void test() {
-    users.stream().forEach(u -> {
+    users.stream().parallel().forEach(u -> {
       LOGGER.info("first=" + u.getFirstName() + " last=" + u.getLastName() + " email=" + u.getEmail());
     });
   }
