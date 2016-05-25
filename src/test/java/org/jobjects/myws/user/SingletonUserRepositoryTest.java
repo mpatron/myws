@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
 public class SingletonUserRepositoryTest extends AbstractLocalIT {
-  private static Logger LOGGER = Logger.getLogger(SingletonUserRepositoryTest.class.getName());
+  private Logger LOGGER = Logger.getLogger(getClass().getName());
 
   @EJB
   UserRepository userRepository;
