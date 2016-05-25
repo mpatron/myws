@@ -15,6 +15,7 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
+import org.jobjects.myws.tools.log.JObjectsLogFormatter;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -26,6 +27,7 @@ public class JSonImpTest {
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
+    JObjectsLogFormatter.initializeLogging();
     final String filePathname = "org/jobjects/random-users.json";
     try {
       URL url = ClassLoader.getSystemResource(filePathname);
@@ -35,11 +37,13 @@ public class JSonImpTest {
           JsonReader parser = Json.createReader(new FileReader(path.toAbsolutePath().toString()));
           JsonObject jsonObject= parser.readObject();
           JsonArray results=jsonObject.getJsonArray("results");
-          results.get
-
-//          InputStream is = new FileInputStream(path.toAbsolutePath().toString());
-//          // ...
-//          is.close();
+          results.stream().forEach(obj -> {
+            JsonObject prof = (JsonObject) obj;
+            JsonObject name = prof.getJsonObject("name");
+            String first =  name.getString("first");
+            String last =  name.getString("last");
+            LOGGER.info("first=" + first+" last=" + last+" email=" + prof.getJsonString("email"));
+          });
         } else {
           LOGGER.severe("Le fichier " + filePathname + " est illisible : " + path.toAbsolutePath());
         }
