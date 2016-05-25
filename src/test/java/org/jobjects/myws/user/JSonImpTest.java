@@ -1,12 +1,12 @@
 package org.jobjects.myws.user;
 
-import static org.junit.Assert.fail;
-
 import java.io.FileReader;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,14 +16,13 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 
 import org.jobjects.myws.tools.log.JObjectsLogFormatter;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class JSonImpTest {
   private static Logger LOGGER = Logger.getLogger(JSonImpTest.class.getName());
+
+  private static List<User> users = new ArrayList<>();
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
@@ -35,14 +34,16 @@ public class JSonImpTest {
         Path path = Paths.get(url.toURI());
         if (Files.isReadable(path)) {
           JsonReader parser = Json.createReader(new FileReader(path.toAbsolutePath().toString()));
-          JsonObject jsonObject= parser.readObject();
-          JsonArray results=jsonObject.getJsonArray("results");
+          JsonObject jsonObject = parser.readObject();
+          JsonArray results = jsonObject.getJsonArray("results");
           results.stream().forEach(obj -> {
             JsonObject prof = (JsonObject) obj;
             JsonObject name = prof.getJsonObject("name");
-            String first =  name.getString("first");
-            String last =  name.getString("last");
-            LOGGER.info("first=" + first+" last=" + last+" email=" + prof.getJsonString("email"));
+            User user = new User();
+            user.setFirstName(name.getString("first"));
+            user.setLastName(name.getString("last"));
+            user.setEmail(prof.getString("email"));
+            users.add(user);
           });
         } else {
           LOGGER.severe("Le fichier " + filePathname + " est illisible : " + path.toAbsolutePath());
@@ -53,24 +54,14 @@ public class JSonImpTest {
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getLocalizedMessage(), e);
     }
-    
-  }
 
-  @AfterClass
-  public static void tearDownAfterClass() throws Exception {
-  }
-
-  @Before
-  public void setUp() throws Exception {
-  }
-
-  @After
-  public void tearDown() throws Exception {
   }
 
   @Test
   public void test() {
-    fail("Not yet implemented");
+    users.stream().forEach(u -> {
+      LOGGER.info("first=" + u.getFirstName() + " last=" + u.getLastName() + " email=" + u.getEmail());
+    });
   }
 
 }
