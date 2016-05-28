@@ -1,13 +1,21 @@
 package org.jobjects.myws.orm;
 
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ejb.EJB;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.ValidatorFactory;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jobjects.myws.tools.arquillian.AbstractLocalIT;
+import org.jobjects.myws.user.JSonImpTest;
 import org.jobjects.myws.user.User;
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,10 +25,37 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class UserStalessTest extends AbstractLocalIT {
 
-  private Logger LOGGER = Logger.getLogger(getClass().getName());
+  private static Logger LOGGER = Logger.getLogger(UserStalessTest.class.getName());
 
   @EJB
   UserFacade userFacade;
+
+  @Test()
+  public void testLoading() {
+    LOGGER.info("public void testLoading()");
+    List<User> users = null;
+    try {
+      JSonImpTest.setUpBeforeClass2();
+      users = JSonImpTest.getUsers();
+    } catch (Exception e) {
+      LOGGER.log(Level.SEVERE, e.getLocalizedMessage(), e);
+      Assert.fail(e.getLocalizedMessage());
+    }
+    Assert.assertNotNull(users);
+    Assert.assertTrue(users.size() > 0);
+    users.stream().parallel().forEach(u -> {
+      LOGGER.info("first=" + u.getFirstName() + " last=" + u.getLastName() + " email=" + u.getEmail());
+      ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+      Set<ConstraintViolation<User>> errors = factory.getValidator().validate(u);
+      for (ConstraintViolation<User> error : errors) {
+        LOGGER.severe(ReflectionToStringBuilder.toString(error.getRootBean(), ToStringStyle.SHORT_PREFIX_STYLE) + " " + error.getMessage()
+            + " due to " + error.getInvalidValue());
+      }
+      if(errors.size()==0) {        
+        userFacade.create(u);
+      }
+    });
+  }
 
   @Test
   public void testCreate() {

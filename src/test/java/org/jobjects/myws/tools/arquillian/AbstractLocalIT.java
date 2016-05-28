@@ -10,7 +10,7 @@ import org.jobjects.myws.tools.log.JObjectsLogFormatter;
  * @author Mickael Patron 2015
  * @version 1.0
  **/
-public abstract class AbstractLocalIT {
+public abstract class AbstractLocalIT extends AbstractIT {
   private static Logger LOGGER = Logger.getLogger(AbstractLocalIT.class.getName());
 
   @Deployment

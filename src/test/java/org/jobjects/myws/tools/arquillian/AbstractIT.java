@@ -22,7 +22,7 @@ import org.jobjects.myws.tools.wildfly.CliUtils;
  * @author Mickael Patron 2015
  * @version 1.0
  **/
-public class AbstractIT {
+public abstract class AbstractIT {
   private static Logger LOGGER = Logger.getLogger(AbstractLocalIT.class.getName());
   public static final String SOURCES_MAIN_JAVA_DIR = "src/main/java";
   public static final String SOURCES_MAIN_RESOURCES_DIR = "src/main/resources";
@@ -65,7 +65,9 @@ public class AbstractIT {
       addAllPackages(war, "org.jobjects", new File(SOURCES_MAIN_JAVA_DIR + "/org/jobjects"));
       addAllResources(war, SOURCES_MAIN_RESOURCES_DIR);
       addAllPackages(war, "org.jobjects", new File(SOURCES_TEST_JAVA_DIR + "/org/jobjects"));
-
+      addAllResources(war, SOURCES_TEST_RESOURCES_DIR);
+      //org/jobjects/random-users.json
+      
       war.as(ZipExporter.class).exportTo(new File("target/myPackage.war"), true);
 
       LOGGER.config("==> War name :" + war.toString(Formatters.VERBOSE));
