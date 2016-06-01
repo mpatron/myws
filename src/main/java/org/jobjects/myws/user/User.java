@@ -1,11 +1,16 @@
 package org.jobjects.myws.user;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Index;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -46,6 +51,9 @@ public class User extends AbstractUUIDBaseEntity implements Serializable {
   @NotNull
   @Pattern(regexp = "^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)+$")
   private String email;
+
+  @OneToMany(mappedBy = "user"/*, fetch = FetchType.LAZY*/, cascade = { CascadeType.ALL })
+  protected List<Address> address = new ArrayList<Address>();
 
   /**
    * @return the firstName
@@ -90,6 +98,20 @@ public class User extends AbstractUUIDBaseEntity implements Serializable {
    */
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  /**
+   * @return the address
+   */
+  public List<Address> getAddress() {
+    return address;
+  }
+
+  /**
+   * @param address the address to set
+   */
+  public void setAddress(List<Address> address) {
+    this.address = address;
   }
 
   /*

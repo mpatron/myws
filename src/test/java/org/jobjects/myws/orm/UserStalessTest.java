@@ -15,6 +15,8 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jobjects.myws.tools.arquillian.AbstractLocalIT;
+import org.jobjects.myws.user.Address;
+import org.jobjects.myws.user.AddressEnum;
 import org.jobjects.myws.user.JSonImpTest;
 import org.jobjects.myws.user.User;
 import org.junit.Assert;
@@ -29,6 +31,9 @@ public class UserStalessTest extends AbstractLocalIT {
 
   @EJB
   UserFacade userFacade;
+
+  @EJB
+  AddressFacade addressFacade;
 
   @Test()
   public void testLoading() {
@@ -65,8 +70,18 @@ public class UserStalessTest extends AbstractLocalIT {
     user.setFirstName("Mickaël");
     user.setLastName("Patron");
     userFacade.create(user);
+
+    Address address = new Address();
+    address.setCity("city");
+    address.setStreet("street");
+    address.setUser(user);
+    address.setType(AddressEnum.HOME);
+    addressFacade.create(address);
+
+    
     User user2 = userFacade.find(user.getId());
     Assert.assertNotNull(user2);
+    Assert.assertNotNull(user2.getAddress().size()>0);
 
     List<User> users = userFacade.findByFirstName("Mickaël");
     for (User user3 : users) {
