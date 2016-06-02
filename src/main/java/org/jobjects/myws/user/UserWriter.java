@@ -21,13 +21,15 @@ public class UserWriter implements MessageBodyWriter<User> {
   private transient Logger LOGGER = Logger.getLogger(getClass().getName());
 
   @Override
-  public boolean isWriteable(Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
-    LOGGER.info("type1=" + type1.getTypeName() + " type=" + type.getCanonicalName());
+  public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+    LOGGER.finest("TypeName=" + genericType.getTypeName() + " CanonicalName=" + type.getCanonicalName() + " User.class.isAssignableFrom="
+        + User.class.isAssignableFrom(type));
     return User.class.isAssignableFrom(type);
   }
 
   @Override
   public long getSize(User t, Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
+    // http://docs.oracle.com/javaee/7/api/javax/ws/rs/ext/MessageBodyWriter.html#getSize-T-java.lang.Class-java.lang.reflect.Type-java.lang.annotation.Annotation:A-javax.ws.rs.core.MediaType-
     // As of JAX-RS 2.0, the method has been deprecated and the
     // value returned by the method is ignored by a JAX-RS runtime.
     // All MessageBodyWriter implementations are advised to return -1 from
@@ -37,8 +39,8 @@ public class UserWriter implements MessageBodyWriter<User> {
   }
 
   @Override
-  public void writeTo(User t, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm, OutputStream out)
-      throws IOException, WebApplicationException {
+  public void writeTo(User t, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm,
+      OutputStream out) throws IOException, WebApplicationException {
     JsonGenerator gen = Json.createGenerator(out);
     gen.writeStartObject();
     if (null != t.getEmail())
