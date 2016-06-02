@@ -36,7 +36,7 @@ public class Address extends AbstractUUIDBaseEntity implements Serializable {
   }
 
   @Enumerated(EnumType.STRING)
-  @Column(length=4)
+  @Column(length = 4)
   private AddressEnum type;
   @Size(max = 80, message = "La longueur de street est inférieur à 80 caractères.")
   private String street;
@@ -47,7 +47,7 @@ public class Address extends AbstractUUIDBaseEntity implements Serializable {
   @Size(max = 20, message = "La longueur de postcode est inférieur à 20 caractères.")
   private String postcode;
 
-  @ManyToOne(/*fetch = FetchType.LAZY*/)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(
       name = "USER_UUID_ID",
       nullable = false) /* UUID_ID vient de user */
@@ -61,7 +61,8 @@ public class Address extends AbstractUUIDBaseEntity implements Serializable {
   }
 
   /**
-   * @param type the type to set
+   * @param type
+   *          the type to set
    */
   public void setType(AddressEnum type) {
     this.type = type;
@@ -135,7 +136,8 @@ public class Address extends AbstractUUIDBaseEntity implements Serializable {
   }
 
   /**
-   * @param user the user to set
+   * @param user
+   *          the user to set
    */
   public void setUser(User user) {
     this.user = user;

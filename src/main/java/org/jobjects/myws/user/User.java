@@ -52,7 +52,7 @@ public class User extends AbstractUUIDBaseEntity implements Serializable {
   @Pattern(regexp = "^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)+$")
   private String email;
 
-  @OneToMany(mappedBy = "user"/*, fetch = FetchType.LAZY*/, cascade = { CascadeType.ALL })
+  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
   protected List<Address> address = new ArrayList<Address>();
 
   /**
