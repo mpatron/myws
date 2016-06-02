@@ -52,7 +52,6 @@ public class UserRESTWebService {
       @ApiResponse(code = 500, message = "Erreur interne.") })
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
-  //@Consumes(MediaType.CHARSET_PARAMETER+"=UTF-8")
   @Produces(MediaType.APPLICATION_JSON)
   public Response createUser(User user, @Context SecurityContext securityContext) {
     Response returnValue = null;

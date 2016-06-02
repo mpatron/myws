@@ -65,18 +65,23 @@ public class UserStalessTest extends AbstractLocalIT {
   @Test
   public void testCreate() {
     LOGGER.info("public void testCreate()");
+    
     User user = new User();
     user.setEmail("mpt@gmail.com");
     user.setFirstName("Mickaël");
     user.setLastName("Patron");
-    userFacade.create(user);
 
     Address address = new Address();
     address.setCity("city");
     address.setStreet("street");
     address.setUser(user);
     address.setType(AddressEnum.HOME);
-    addressFacade.create(address);
+
+    user.getAddress().add(address);
+    
+    userFacade.create(user);
+
+    //addressFacade.create(address);
 
     
     User user2 = userFacade.find(user.getId());

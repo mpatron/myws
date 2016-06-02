@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,6 +63,13 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
       user.setEmail("mpt@gmail.com");
       user.setFirstName("Mickaël");
       user.setLastName("Patron");
+      Address address = new Address();
+      address.setType(AddressEnum.HOME);
+      address.setStreet("1 rue de la paix");
+      address.setPostcode("75001");
+      address.setCity("Paris");
+      address.setState(Locale.FRANCE.getCountry());
+      user.getAddress().add(address);
       Response response = webTarget.request().post(Entity.json(user));
       StatusType statusType = response.getStatusInfo();
       if (Response.Status.Family.SUCCESSFUL.equals(Response.Status.Family.familyOf(statusType.getStatusCode()))) {

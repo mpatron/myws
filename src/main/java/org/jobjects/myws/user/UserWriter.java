@@ -15,6 +15,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
 public class UserWriter implements MessageBodyWriter<User> {
@@ -39,17 +41,10 @@ public class UserWriter implements MessageBodyWriter<User> {
   }
 
   @Override
-  public void writeTo(User t, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm,
+  public void writeTo(User user, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm,
       OutputStream out) throws IOException, WebApplicationException {
-    JsonGenerator gen = Json.createGenerator(out);
-    gen.writeStartObject();
-    if (null != t.getEmail())
-      gen.write("email", t.getEmail());
-    if (null != t.getFirstName())
-      gen.write("firstName", t.getFirstName());
-    if (null != t.getLastName())
-      gen.write("lastName", t.getLastName());
-    gen.writeEnd();
-    gen.flush();
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.writeValue(out, user);
+    LOGGER.finest("out -> user as json : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(user));
   }
 }
