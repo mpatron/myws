@@ -6,8 +6,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.logging.Logger;
 
-import javax.json.Json;
-import javax.json.stream.JsonGenerator;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -15,6 +13,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Provider
@@ -44,6 +43,7 @@ public class UserWriter implements MessageBodyWriter<User> {
   public void writeTo(User user, Class<?> type, Type type1, Annotation[] antns, MediaType mt, MultivaluedMap<String, Object> mm,
       OutputStream out) throws IOException, WebApplicationException {
     ObjectMapper mapper = new ObjectMapper();
+    mapper.setSerializationInclusion(Include.NON_NULL);
     mapper.writeValue(out, user);
     LOGGER.finest("out -> user as json : " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(user));
   }
