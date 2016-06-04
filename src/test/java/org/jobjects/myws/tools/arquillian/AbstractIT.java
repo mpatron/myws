@@ -70,7 +70,7 @@ public abstract class AbstractIT {
       
       war.as(ZipExporter.class).exportTo(new File("target/myPackage.war"), true);
 
-      LOGGER.config("==> War name :" + war.toString(Formatters.VERBOSE));
+      LOGGER.finest("==> War name :" + war.toString(Formatters.VERBOSE));
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getLocalizedMessage(), e);
     }
@@ -89,7 +89,7 @@ public abstract class AbstractIT {
    *          directory for the base package
    */
   protected static void addAllPackages(WebArchive war, String prefix, File dir) {
-    LOGGER.fine("Package add:" + prefix);
+    LOGGER.finest("Package add:" + prefix);
     // war.addPackage(prefix);
     // war.addPackages(false,
     // Filters.exclude("(.*Test.class)|(.*"+StringUtils.replace(AbstractIT.class.getPackage().getName(),
@@ -137,7 +137,7 @@ public abstract class AbstractIT {
         addAllResources(war, prefix, file);
       }
     } else {
-      LOGGER.fine("Ressource add:" + prefix + dir.getName());
+      LOGGER.finest("Ressource add:" + prefix + dir.getName());
       war.addAsResource(dir, prefix + dir.getName());
     }
   }
@@ -160,7 +160,7 @@ public abstract class AbstractIT {
       if (Files.isReadable(pathResource)) {
         war.addAsWebInfResource(pathResource.toFile(), resourceName);
       } else {
-        LOGGER.config("Resource : " + resource + " is not readable.");
+        LOGGER.finest("Resource : " + resource + " is not readable.");
       }
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getLocalizedMessage(), e);
