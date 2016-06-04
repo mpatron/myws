@@ -1,11 +1,12 @@
 package org.jobjects.myws.user;
 
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.validation.ConstraintViolation;
@@ -26,7 +27,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import org.apache.commons.lang3.StringUtils;
+import org.jobjects.myws.orm.AddressFacade;
+import org.jobjects.myws.orm.UserFacade;
 import org.jobjects.myws.rest.Tracked;
 
 import io.swagger.annotations.Api;
@@ -44,8 +46,11 @@ import io.swagger.annotations.ApiResponses;
 public class UserRESTWebService {
   private transient Logger LOGGER = Logger.getLogger(getClass().getName());
 
-  @Inject
-  UserRepository userRepository;
+  @EJB
+  UserFacade userFacade;
+
+  @EJB
+  AddressFacade addressFacade;
 
   @ApiOperation(value = "Stocker un user.")
   @ApiResponses(value = { @ApiResponse(code = 200, message = "cas nominal."), @ApiResponse(code = 403, message = "Interdiction d'accès."),
@@ -53,7 +58,7 @@ public class UserRESTWebService {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response createUser(User user, @Context SecurityContext securityContext) {
+  public Response create(User user, @Context SecurityContext securityContext) {
     Response returnValue = null;
     try {
       ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -64,12 +69,24 @@ public class UserRESTWebService {
         sb.append(String.format("%s: %s%n", violation.getPropertyPath(), violation.getMessage()));
         sb.append(System.lineSeparator());
       }      
-      if(StringUtils.isEmpty(sb.toString())) {
-        userRepository.addUser(user);
+      if(violations.size()==0) {
+        List<Address> addresses = user.getAddress();
+        if (0 == addresses.size()) {
+          userFacade.create(user);
+        } else {
+          user.setAddress(null);
+          userFacade.create(user);
+          for (Address address : addresses) {
+            address.setUser(user);
+            addressFacade.create(address);
+          }
+          user = userFacade.find(user.getId());
+          //user.setAddress(addresses);
+        }
         returnValue = Response.ok(user, MediaType.APPLICATION_JSON).encoding("UTF-8").build();
       } else {
         LOGGER.log(Level.WARNING, sb.toString());
-        returnValue = Response.status(Response.Status.EXPECTATION_FAILED).encoding("UTF-8").entity(sb.toString()).build();
+        returnValue = Response.status(Response.Status.BAD_REQUEST).encoding("UTF-8").entity(sb.toString()).build();
       }
 
     } catch (Exception e) {
@@ -80,11 +97,12 @@ public class UserRESTWebService {
   }
 
   @PUT
+  @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response updateUser(User user, @Context SecurityContext securityContext) {
+  public Response update(User user, @Context SecurityContext securityContext) {
     Response returnValue = null;
     try {
-      userRepository.addUser(user);
+      userFacade.save(user);
       returnValue = Response.ok(user, MediaType.APPLICATION_JSON).build();
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
@@ -94,63 +112,43 @@ public class UserRESTWebService {
   }
 
   @DELETE
-  @Path("/{user.email}")
+  @Path("{user.email}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response deleteUser(@PathParam("user.email") String email, @Context SecurityContext securityContext) {
+  public Response delete(@PathParam("user.email") String email, @Context SecurityContext securityContext) {
     Response returnValue = null;
     try {
-      User user = userRepository.deleteUser(email);
-      returnValue = Response.ok(user, MediaType.APPLICATION_JSON).build();
+      
+      User user = userFacade.findByEmail(email);
+      if(user != null) {
+        userFacade.remove(user);
+        returnValue = Response.ok(user, MediaType.APPLICATION_JSON).build();
+      } else {
+        returnValue = Response.status(Response.Status.NO_CONTENT).build();
+      }
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
-      returnValue = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+      returnValue = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
     }
     return returnValue;
   }
 
   @GET
-  @Path("/{user.email}")
+  @Path("{userEmail}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response showUser(@PathParam("user.email") String email, @Context SecurityContext securityContext) {
+  public Response show(@PathParam("userEmail") String email, @Context SecurityContext securityContext) {
     Response returnValue = null;
     try {
-      User user = userRepository.getUser(email);
-      returnValue = Response.ok(user, MediaType.APPLICATION_JSON).build();
+      User user = userFacade.findByEmail(email);
+      if(user != null) {
+        returnValue = Response.ok(user, MediaType.APPLICATION_JSON).build();
+      } else {
+        returnValue = Response.status(Response.Status.NO_CONTENT).build();
+      }
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
       returnValue = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
     return returnValue;
-  }
-
-  @Path("/mafonction")
-  @PUT
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response mafonction(@QueryParam("param1") String param1, @QueryParam("param2") String param2) {
-    Response returnValue = null;
-    try {
-      JsonObjectBuilder jsonReturnValue = Json.createObjectBuilder();
-      JsonObjectBuilder json = Json.createObjectBuilder();
-      json.add("param1", param1);
-      json.add("param2", param2);
-      jsonReturnValue.add("return", json);
-      String jsonStr = jsonReturnValue.build().toString();
-      returnValue = Response.ok(jsonStr, MediaType.APPLICATION_JSON).build();
-    } catch (Exception e) {
-      LOGGER.log(Level.SEVERE, e.getMessage(), e);
-      returnValue = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-    }
-    return returnValue;
-  }
-
-  @Path("/mafonction2")
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response mafonction2() {
-    JsonObjectBuilder json = Json.createObjectBuilder();
-    json.add("retour", "" + (userRepository != null));
-    String jsonStr = json.build().toString();
-    return Response.ok(jsonStr, MediaType.APPLICATION_JSON).build();
   }
 
 }

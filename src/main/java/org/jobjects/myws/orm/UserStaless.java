@@ -7,6 +7,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jobjects.myws.user.User;
 
@@ -34,6 +36,16 @@ public class UserStaless extends AbstractFacade<User> implements UserFacade {
     TypedQuery<User> query = getEntityManager().createNamedQuery(User.FIND_BY_FIRSTNAME, User.class);
     return query.setParameter("firstName", firstName).getResultList();
   }
-
+  
+  public User findByEmail(final String email) {
+    User returnValue=null;
+    List<User> users = findByNamedQuery(User.FIND_BY_EMAIL, email);
+    for (User user : users) {
+      returnValue = user;
+      break;
+    }
+    return returnValue;
+  }
+  
 }
  

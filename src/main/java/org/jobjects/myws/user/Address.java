@@ -17,6 +17,8 @@ import javax.validation.constraints.Size;
 
 import org.jobjects.myws.orm.AbstractUUIDBaseEntity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "ADDRESS", indexes = { @Index(name = "idx_address_unique", columnList = "user_uuid_id,type", unique = true) })
 @NamedQueries({
@@ -47,6 +49,7 @@ public class Address extends AbstractUUIDBaseEntity implements Serializable {
   @Size(max = 20, message = "La longueur de postcode est inférieur à 20 caractères.")
   private String postcode;
 
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(
       name = "USER_UUID_ID",

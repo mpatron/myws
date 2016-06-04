@@ -53,12 +53,33 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
   private URL deployUrl;
 
   @Test
-  public void testCreateUserTrue() throws IOException, SAXException {
+  public void testCreateUserSimple() {
     try {
-      Client client = ClientBuilder.newClient();
-      LOGGER.info("deployUrl : " + (deployUrl == null ? StringUtils.EMPTY : deployUrl.toString()));
-      WebTarget webTarget = client.target(deployUrl.toString().replace("8080", "9143") + "api/user");
-      LOGGER.info("URI : " + webTarget.getUri());
+      User user = new User();
+      user.setEmail("mpt@gmail.com");
+      user.setFirstName("Mickaël");
+      user.setLastName("Patron");
+
+      UserRestClient userRestClient = new UserRestClient(deployUrl);
+      if(null==userRestClient.show(user.getEmail())) {
+        userRestClient.delete(user.getEmail());
+      }
+      User userReturn = userRestClient.create(user);
+      
+      Assert.assertEquals(user.getEmail(), userReturn.getEmail());
+      Assert.assertEquals(user.getFirstName(), userReturn.getFirstName());
+      Assert.assertEquals(user.getLastName(), userReturn.getLastName());
+      Assert.assertNotNull(userReturn.getId());
+      LOGGER.info("testCreateUserDirect2 => OK");
+    } catch (Exception e) {
+      LOGGER.log(Level.SEVERE, e.getMessage(), e);
+      Assert.fail(e.getLocalizedMessage());
+    }
+  }
+
+  @Test
+  public void testCreateUserComplet() throws IOException, SAXException {
+    try {
       User user = new User();
       user.setEmail("mpt@gmail.com");
       user.setFirstName("Mickaël");
@@ -70,19 +91,19 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
       address.setCity("Paris");
       address.setState(Locale.FRANCE.getCountry());
       user.getAddress().add(address);
-      Response response = webTarget.request().post(Entity.json(user));
-      StatusType statusType = response.getStatusInfo();
-      if (Response.Status.Family.SUCCESSFUL.equals(Response.Status.Family.familyOf(statusType.getStatusCode()))) {
-        User userReturn = response.readEntity(User.class);
-        LOGGER.info("userReturn=" + userReturn);
-        Assert.assertEquals(user.getEmail(), userReturn.getEmail());
-        Assert.assertEquals(user.getFirstName(), userReturn.getFirstName());
-        Assert.assertEquals(user.getLastName(), userReturn.getLastName());
-      } else {
-        LOGGER.log(Level.SEVERE,
-            statusType.getReasonPhrase() + " => " + (response.bufferEntity() ? response.readEntity(String.class) : StringUtils.EMPTY));
-        Assert.assertTrue(false);
+
+      UserRestClient userRestClient = new UserRestClient(deployUrl);
+      if(null==userRestClient.show(user.getEmail())) {
+        userRestClient.delete(user.getEmail());
       }
+      User userReturn = userRestClient.create(user);
+      
+      Assert.assertEquals(user.getEmail(), userReturn.getEmail());
+      Assert.assertEquals(user.getFirstName(), userReturn.getFirstName());
+      Assert.assertEquals(user.getLastName(), userReturn.getLastName());
+      Assert.assertNotNull(userReturn.getId());
+      Assert.assertTrue(userReturn.getAddress().size()>0);
+
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
       Assert.fail(e.getLocalizedMessage());
@@ -92,29 +113,27 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
   @Test
   public void testCreateUserFalse() throws IOException, SAXException {
     try {
-      Client client = ClientBuilder.newClient();
-      LOGGER.info("deployUrl : " + (deployUrl == null ? StringUtils.EMPTY : deployUrl.toString()));
-      WebTarget webTarget = client.target(deployUrl.toString().replace("8080", "9143") + "api/user");
-      LOGGER.info("URI : " + webTarget.getUri());
       User user = new User();
       user.setEmail("mpt@gmail.com");
-      // user.setFirstName("Mickaël");
+      user.setFirstName(null);
       user.setLastName("Patron");
-      Response response = webTarget.request().post(Entity.json(user));
-      StatusType statusType = response.getStatusInfo();
-      if (Response.Status.Family.SUCCESSFUL.equals(Response.Status.Family.familyOf(statusType.getStatusCode()))) {
-        User userReturn = response.readEntity(User.class);
-        LOGGER.info("userReturn=" + userReturn);
-        Assert.assertTrue(false);
-      } else {
-        LOGGER.log(Level.SEVERE,
-            statusType.getReasonPhrase() + " => " + (response.bufferEntity() ? response.readEntity(String.class) : StringUtils.EMPTY));
-        Assert.assertTrue(true);
+
+      UserRestClient userRestClient = new UserRestClient(deployUrl);
+      if(null==userRestClient.show(user.getEmail())) {
+        userRestClient.delete(user.getEmail());
       }
+      User userReturn = userRestClient.create(user);
+      
+      Assert.assertEquals(user.getEmail(), userReturn.getEmail());
+      Assert.assertEquals(user.getFirstName(), userReturn.getFirstName());
+      Assert.assertEquals(user.getLastName(), userReturn.getLastName());
+      Assert.assertNotNull(userReturn.getId());
+      LOGGER.info("testCreateUserDirect2 => OK");
     } catch (Exception e) {
+      Assert.assertTrue(true);
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
-      Assert.fail(e.getLocalizedMessage());
     }
+    
   }
 
   private static String convertStreamToString(java.io.InputStream is, String encoding) {
@@ -123,6 +142,8 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
     return s.hasNext() ? s.next() : "";
   }
 
+
+  
   @Test
   public void testCreateUserDirect() {
     try {
@@ -174,37 +195,4 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
     }
   }
 
-  @Test
-  public void testMafonction() {
-    try {
-      LOGGER.info("deployUrl : " + (deployUrl == null ? StringUtils.EMPTY : deployUrl.toString()));
-      WebConversation webConversation = new WebConversation();
-      InputStream source = new ByteArrayInputStream("une fois rien...".getBytes());
-      PutMethodWebRequest request = new PutMethodWebRequest(
-          deployUrl.toString().replace("8080", "9143") + "/api/user/mafonction?param1=pArAm_1&param2=PaRam_2", source,
-          MediaType.APPLICATION_JSON);
-      LOGGER.info("URL : " + request.getURL());
-      WebResponse response = webConversation.getResponse(request);
-      assertEquals(200, response.getResponseCode());
-      LOGGER.info(response.getText());
-      assertTrue(response.getText().contains("pArAm_1"));
-      assertTrue(response.getText().contains("PaRam_2"));
-      source.close();
-    } catch (Exception e) {
-      LOGGER.log(Level.SEVERE, e.getMessage(), e);
-      Assert.fail(e.getLocalizedMessage());
-    }
-  }
-
-  @Test
-  public void testMafonction2() throws IOException, SAXException {
-    WebConversation webConversation = new WebConversation();
-    InputStream source = new ByteArrayInputStream("de fois rien...".getBytes());
-    GetMethodWebRequest request = new GetMethodWebRequest(deployUrl.toString().replace("8080", "9143") + "/api/user/mafonction2");
-    WebResponse response = webConversation.getResponse(request);
-    assertEquals(200, response.getResponseCode());
-    LOGGER.info("Json :" + response.getText());
-    assertTrue(response.getText().contains("true"));
-    source.close();
-  }
 }
