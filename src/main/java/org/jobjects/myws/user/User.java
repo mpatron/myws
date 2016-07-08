@@ -108,7 +108,8 @@ public class User extends AbstractUUIDBaseEntity implements Serializable {
   }
 
   /**
-   * @param address the address to set
+   * @param address
+   *          the address to set
    */
   public void setAddress(List<Address> address) {
     this.address = address;

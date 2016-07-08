@@ -31,7 +31,7 @@ public class EMailValidatorTest extends AbstractRemoteIT {
   private URL deployUrl;
 
   @Test
-  public void testValidateEmail() {
+  public void testIsValideEmail() {
     try {
       Client client = ClientBuilder.newClient();
       LOGGER.info("deployUrl : " + (deployUrl == null ? StringUtils.EMPTY : deployUrl.toString()));
@@ -54,7 +54,6 @@ public class EMailValidatorTest extends AbstractRemoteIT {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
       Assert.fail(e.getLocalizedMessage());
     }
-
   }
-
+  
 }
