@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
+import org.jobjects.myws.batch.BatchMain;
 import org.jobjects.myws.email.EMailValidator;
 import org.jobjects.myws.user.UserRESTWebService;
 import org.jobjects.myws.user.UserReader;
@@ -46,6 +47,7 @@ public class RestApplicationConfiguration extends Application {
       resources.add(UserWriter.class);
       resources.add(UserReader.class);
       resources.add(TrafficLogger.class);
+      resources.add(BatchMain.class);
       resources.add(io.swagger.jaxrs.listing.ApiListingResource.class);
       resources.add(io.swagger.jaxrs.listing.SwaggerSerializers.class);
       return resources;

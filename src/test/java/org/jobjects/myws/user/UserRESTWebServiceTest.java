@@ -98,12 +98,15 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
         userRestClient.delete(user.getEmail());
       }
       User userReturn = userRestClient.create(user);
-
+      /* begin Code inatteignable
+       * Il y a une erreur. 
+       */
       Assert.assertEquals(user.getEmail(), userReturn.getEmail());
       Assert.assertEquals(user.getFirstName(), userReturn.getFirstName());
       Assert.assertEquals(user.getLastName(), userReturn.getLastName());
       Assert.assertNotNull(userReturn.getId());
       LOGGER.info("testCreateUserDirect2 => OK");
+      /* end Code inatteignable */
     } catch (Exception e) {
       Assert.assertTrue(true);
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
