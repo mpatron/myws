@@ -27,11 +27,11 @@ import io.swagger.annotations.Api;
 @Path("/batch")
 @RequestScoped
 @Tracked
-public class BatchMain {
+public class BatchRESTWebService {
   private transient Logger LOGGER = Logger.getLogger(getClass().getName());
   
 	public static void main(String[] args) {
-	  BatchMain batchMain = new BatchMain();
+	  BatchRESTWebService batchMain = new BatchRESTWebService();
 	  batchMain.dojob(null);
 	}
 
