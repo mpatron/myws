@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.validation.ValidationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -37,7 +38,7 @@ public class UserRestClient {
     this.deployUrl = deployUrl;
   }
   
-  public User create(User user) {
+  public User create(User user) throws ValidationException {
     User returnValue = null;
     try {
       Client client = ClientBuilder.newClient();
@@ -54,6 +55,7 @@ public class UserRestClient {
       
     } catch (RuntimeException e) {
       LOGGER.log(Level.WARNING, e.getMessage() + " user = " + ReflectionToStringBuilder.toString(user, ToStringStyle.JSON_STYLE));
+      throw new ValidationException(e.getMessage() + " user = " + ReflectionToStringBuilder.toString(user, ToStringStyle.JSON_STYLE));
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
     }
