@@ -17,4 +17,20 @@
         </batchlet>
         <end on="END"/>
     </step>
+    <split id="mySplit">
+        <flow id="flow1">
+            <step id="flow1etape1" next="flow1etape2">
+                <chunk>
+                    <reader ref="myReader"></reader>
+                    <processor ref="myProcessor"></processor>
+                    <writer ref="myWriter"></writer>
+                </chunk>
+            </step>
+            <step id="flow1etape2">
+                <batchlet ref="myBatchet3"></batchlet>
+                <end on="END"/>
+            </step>
+        </flow>
+        <flow id="flow2"></flow>
+    </split>
 </job>

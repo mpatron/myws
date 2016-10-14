@@ -73,17 +73,32 @@ public class UserRESTWebService {
         List<Address> addresses = user.getAddress();
         if (0 == addresses.size()) {
           userFacade.create(user);
+          returnValue = Response.ok(user, MediaType.APPLICATION_JSON).encoding("UTF-8").build();
         } else {
-          user.setAddress(null);
-          userFacade.create(user);
+          boolean isErrorInAddress=false;
           for (Address address : addresses) {
-            address.setUser(user);
-            addressFacade.create(address);
+            Set<ConstraintViolation<Address>> violationAddresss = validator.validate(address);
+            for (ConstraintViolation<Address> violation : violationAddresss) {
+              sb.append(String.format("%s: %s%n", violation.getPropertyPath(), violation.getMessage()));
+              sb.append(System.lineSeparator());
+              isErrorInAddress=true;
+            }
           }
-          user = userFacade.find(user.getId());
+          if(!isErrorInAddress) {
+            LOGGER.log(Level.WARNING, sb.toString());
+            returnValue = Response.status(Response.Status.BAD_REQUEST).encoding("UTF-8").entity(sb.toString()).build();
+          } else {
+            user.setAddress(null);
+            userFacade.create(user);
+            for (Address address : addresses) {
+              address.setUser(user);
+              addressFacade.create(address);
+            }
+            user = userFacade.find(user.getId());
+            returnValue = Response.ok(user, MediaType.APPLICATION_JSON).encoding("UTF-8").build();
+          }
           // user.setAddress(addresses);
         }
-        returnValue = Response.ok(user, MediaType.APPLICATION_JSON).encoding("UTF-8").build();
       } else {
         LOGGER.log(Level.WARNING, sb.toString());
         returnValue = Response.status(Response.Status.BAD_REQUEST).encoding("UTF-8").entity(sb.toString()).build();

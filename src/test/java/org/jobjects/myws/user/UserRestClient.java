@@ -56,8 +56,8 @@ public class UserRestClient {
     } catch (RuntimeException e) {
       LOGGER.log(Level.WARNING, e.getMessage() + " user = " + ReflectionToStringBuilder.toString(user, ToStringStyle.JSON_STYLE));
       throw new ValidationException(e.getMessage() + " user = " + ReflectionToStringBuilder.toString(user, ToStringStyle.JSON_STYLE));
-    } catch (Exception e) {
-      LOGGER.log(Level.SEVERE, e.getMessage(), e);
+//    } catch (Exception e) {
+//      LOGGER.log(Level.SEVERE, e.getMessage(), e);
     }
     return returnValue;
   }

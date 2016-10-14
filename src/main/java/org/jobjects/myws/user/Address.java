@@ -44,7 +44,7 @@ public class Address extends AbstractUUIDBaseEntity implements Serializable {
   private String street;
   @Size(max = 40, message = "La longueur de city est inférieur à 40 caractères.")
   private String city;
-  @Size(max = 2, message = "La longueur de state est inférieur à 80 caractères.")
+  @Size(max = 2, message = "La longueur de state est inférieur à 2 caractères.")
   private String state;
   @Size(max = 20, message = "La longueur de postcode est inférieur à 20 caractères.")
   private String postcode;
