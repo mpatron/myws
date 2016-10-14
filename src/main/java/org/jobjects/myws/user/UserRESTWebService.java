@@ -30,6 +30,7 @@ import org.jobjects.myws.rest.Tracked;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -52,13 +53,13 @@ public class UserRESTWebService {
   @ApiOperation(value = "Stocker un user.")
   @ApiResponses(
       value = {
-          @ApiResponse(code = 200, message = "cas nominal."),
+          @ApiResponse(code = 200, message = "cas nominal.", response=User.class),
           @ApiResponse(code = 403, message = "Interdiction d'accès."),
           @ApiResponse(code = 500, message = "Erreur interne.") })
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response create(User user, @Context SecurityContext securityContext) {
+  public Response create(@ApiParam(value="User en JSON") User user, @Context SecurityContext securityContext) {
     Response returnValue = null;
     try {
       ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -110,10 +111,16 @@ public class UserRESTWebService {
     return returnValue;
   }
 
+  @ApiOperation(value = "Mise à jour d'un user.")
+  @ApiResponses(
+      value = {
+          @ApiResponse(code = 200, message = "cas nominal.", response=User.class),
+          @ApiResponse(code = 400, message = "Contenu du JSON ne respectant pas les rèles."),
+          @ApiResponse(code = 500, message = "Erreur interne.") })
   @PUT
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response update(User user, @Context SecurityContext securityContext) {
+  public Response update(@ApiParam(value="User en JSON") User user, @Context SecurityContext securityContext) {
     Response returnValue = null;
     try {
       ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -150,10 +157,16 @@ public class UserRESTWebService {
     return returnValue;
   }
 
+  @ApiOperation(value = "Suppression d'un user.")
+  @ApiResponses(
+      value = {
+          @ApiResponse(code = 200, message = "cas nominal.", response=User.class),
+          @ApiResponse(code = 204, message = "Suppression impossible"),
+          @ApiResponse(code = 500, message = "Erreur interne.") })
   @DELETE
   @Path("{user.email}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response delete(@PathParam("user.email") String email, @Context SecurityContext securityContext) {
+  public Response delete(@ApiParam(value="Email de l'utilisateur.") @PathParam("user.email") String email, @Context SecurityContext securityContext) {
     Response returnValue = null;
     try {
 
@@ -171,17 +184,23 @@ public class UserRESTWebService {
     return returnValue;
   }
 
+  @ApiOperation(value = "Affichage d'un user.")
+  @ApiResponses(
+      value = {
+          @ApiResponse(code = 200, message = "cas nominal.", response=User.class),
+          @ApiResponse(code = 404, message = "Affichage impossible, contenue non disponible."),
+          @ApiResponse(code = 500, message = "Erreur interne.") })
   @GET
   @Path("{userEmail}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response show(@PathParam("userEmail") String email, @Context SecurityContext securityContext) {
+  public Response show(@ApiParam(value="Email de l'utilisateur.") @PathParam("userEmail") String email, @Context SecurityContext securityContext) {
     Response returnValue = null;
     try {
       User user = userFacade.findByEmail(email);
       if (user != null) {
         returnValue = Response.ok(user, MediaType.APPLICATION_JSON).build();
       } else {
-        returnValue = Response.status(Response.Status.NO_CONTENT).build();
+        returnValue = Response.status(Response.Status.NOT_FOUND).build();
       }
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
