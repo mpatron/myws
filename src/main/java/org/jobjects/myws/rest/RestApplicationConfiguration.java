@@ -30,8 +30,9 @@ public class RestApplicationConfiguration extends Application {
   
   public RestApplicationConfiguration() {
     BeanConfig beanConfig = new BeanConfig();
+    beanConfig.setTitle("My web Service");
     beanConfig.setVersion("1.0.2");
-    beanConfig.setSchemes(new String[] { "http" });
+    beanConfig.setSchemes(new String[] { "http", "https" });
     beanConfig.setHost("localhost:8080");
     beanConfig.setBasePath("/myws/api");
     beanConfig.setResourcePackage("org.jobjects.myws");
@@ -41,15 +42,19 @@ public class RestApplicationConfiguration extends Application {
   @Override
   public Set<Class<?>> getClasses() {
       Set<Class<?>> resources = new HashSet<Class<?>>();
-      resources.add(CustomRequestWrapperFilter.class);      
+      /* filtering pour swagger */
+      resources.add(CORSFilter.class);
+      resources.add(io.swagger.jaxrs.listing.ApiListingResource.class);
+      resources.add(io.swagger.jaxrs.listing.SwaggerSerializers.class);
+      /* filtering pour le logging */
+      resources.add(CustomRequestWrapperFilter.class);
+      resources.add(TrafficLogger.class);
+      /* web services */
       resources.add(EMailValidator.class);
       resources.add(UserRESTWebService.class);
       resources.add(UserWriter.class);
       resources.add(UserReader.class);
-      resources.add(TrafficLogger.class);
       resources.add(BatchRESTWebService.class);
-      resources.add(io.swagger.jaxrs.listing.ApiListingResource.class);
-      resources.add(io.swagger.jaxrs.listing.SwaggerSerializers.class);
       return resources;
   }
 }

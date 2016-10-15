@@ -50,7 +50,7 @@ public class UserRESTWebService {
   @EJB
   AddressFacade addressFacade;
 
-  @ApiOperation(value = "Stocker un user.")
+  @ApiOperation(value = "Création d'un user.")
   @ApiResponses(
       value = {
           @ApiResponse(code = 200, message = "cas nominal.", response=User.class),
@@ -161,7 +161,7 @@ public class UserRESTWebService {
   @ApiResponses(
       value = {
           @ApiResponse(code = 200, message = "cas nominal.", response=User.class),
-          @ApiResponse(code = 204, message = "Suppression impossible"),
+          @ApiResponse(code = 204, message = "Suppression impossible, contenue non disponible."),
           @ApiResponse(code = 500, message = "Erreur interne.") })
   @DELETE
   @Path("{user.email}")
