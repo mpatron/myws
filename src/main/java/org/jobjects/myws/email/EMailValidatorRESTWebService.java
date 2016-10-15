@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.json.Json;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -22,7 +23,7 @@ import io.swagger.annotations.Api;
 @Path("/email")
 @RequestScoped
 @Tracked
-public class EMailValidator {
+public class EMailValidatorRESTWebService {
   private transient Logger LOGGER = Logger.getLogger(getClass().getName());
 
   @EJB
