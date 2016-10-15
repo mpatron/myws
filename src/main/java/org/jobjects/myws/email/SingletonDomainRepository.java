@@ -72,10 +72,13 @@ public class SingletonDomainRepository implements DomainRepository {
     return dirContext;
   }
   
-  public boolean validateEmail(String email) throws NamingException {
+  public boolean validateEmail(String email) {
     // string character check
-    if (!email.matches("[^@]+@([-\\p{Alnum}]+\\.)*\\p{Alnum}+"))
-      throw new NamingException("please check you are using only valid characters in the email address entered.");
+    if (!email.matches("[^@]+@([-\\p{Alnum}]+\\.)*\\p{Alnum}+")) {
+      //Please check you are using only valid characters in the email address entered.
+      return false;
+    }
+      
     String[] temp = email.split("@");
     //String user = temp[0];
     String hostname = temp[1];
@@ -88,19 +91,20 @@ public class SingletonDomainRepository implements DomainRepository {
     }
     // now that it is not a common domain
     if (!contains(hostname)) {
-//      Hashtable<String, String> env = new Hashtable<String,String>();
-//      env.put(javax.naming.Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.dns.DnsContextFactory");
-//      DirContext ictx = new InitialDirContext( env );
-      //DirContext ictx = new InitialDirContext();
-      DirContext ictx = getDirContext();
-      Attributes attrs = ictx.getAttributes(hostname, new String[] { "MX", "A" });
-      System.out.println("" + attrs);
-      Attribute attr = attrs.get("mx");
-      if (attr == null) {
-        throw new NamingException("This domain does not exist.");
-      } else {
-        add(hostname);
-        return true;// we have found records we are happy.
+      try {
+        DirContext ictx = getDirContext();
+        Attributes attrs = ictx.getAttributes(hostname, new String[] { "MX", "A" });
+        System.out.println("" + attrs);
+        Attribute attr = attrs.get("mx");
+        if (attr == null) {
+          // This domain does not exist."
+          return false;
+        } else {
+          add(hostname);
+          return true;// we have found records we are happy.
+        }
+      } catch (NamingException e) {
+        return false;
       }
     } else {
       return true;// we have found records in cash.

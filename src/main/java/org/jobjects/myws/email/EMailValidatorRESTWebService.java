@@ -22,7 +22,7 @@ import io.swagger.annotations.Api;
 @Path("/email")
 @RequestScoped
 @Tracked
-public class EMailValidator {
+public class EMailValidatorRESTWebService {
   private transient Logger LOGGER = Logger.getLogger(getClass().getName());
 
   @EJB

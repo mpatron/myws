@@ -7,7 +7,7 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 import org.jobjects.myws.batch.BatchRESTWebService;
-import org.jobjects.myws.email.EMailValidator;
+import org.jobjects.myws.email.EMailValidatorRESTWebService;
 import org.jobjects.myws.user.UserRESTWebService;
 import org.jobjects.myws.user.UserReader;
 import org.jobjects.myws.user.UserWriter;
@@ -50,7 +50,7 @@ public class RestApplicationConfiguration extends Application {
       resources.add(CustomRequestWrapperFilter.class);
       resources.add(TrafficLogger.class);
       /* web services */
-      resources.add(EMailValidator.class);
+      resources.add(EMailValidatorRESTWebService.class);
       resources.add(UserRESTWebService.class);
       resources.add(UserWriter.class);
       resources.add(UserReader.class);
