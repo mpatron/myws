@@ -36,19 +36,19 @@ public class SingletonDomainRepositoryTest extends AbstractLocalIT {
 
   @Test
   public void testAdd() {
-    domainRepository.add("domain");
+    domainRepository.add("domain", true);
     Assert.assertTrue(domainRepository.count()>0);
   }
-
+  
   @Test
   public void testCount() {
-    domainRepository.add("domain");
+    domainRepository.add("domain", true);
     Assert.assertTrue(domainRepository.count()>0);
   }
 
   @Test
   public void testContains() {
-    domainRepository.add("domain");
+    domainRepository.add("domain", true);
     Assert.assertTrue(domainRepository.contains("domain"));
   }
 

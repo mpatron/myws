@@ -6,15 +6,18 @@ import javax.naming.directory.DirContext;
 
 @Local
 public interface DomainRepository {
-  void add(String domain);
+  DirContext getDirContext();
 
+  void add(String domain, boolean isValid);
+
+  boolean getValidityDomain(String domain);
+  
   int count();
 
   boolean contains(String domain);
 
   boolean remove(String domain);
   
-  DirContext getDirContext();
   
   public boolean validateEmail(String email) throws NamingException;
 }

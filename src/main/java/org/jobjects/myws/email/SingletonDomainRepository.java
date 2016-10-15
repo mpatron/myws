@@ -1,8 +1,8 @@
 package org.jobjects.myws.email;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +16,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 @Singleton
@@ -23,12 +24,12 @@ import org.apache.commons.lang3.StringUtils;
 public class SingletonDomainRepository implements DomainRepository {
   private transient Logger LOGGER = Logger.getLogger(getClass().getName());
 
-  private Collection<String> domains;
+  private Map<String, Boolean> domains;
   private DirContext dirContext;
 
   @PostConstruct
   void initialize() {
-    domains = new HashSet<String>();
+    domains = new HashMap<>();
 
     try {
       Hashtable<String, String> env = new Hashtable<String, String>();
@@ -49,8 +50,8 @@ public class SingletonDomainRepository implements DomainRepository {
 
   @Override
   @Lock(LockType.WRITE)
-  public void add(String domain) {
-    domains.add(domain);
+  public void add(String domain, boolean isValid) {
+    domains.put(domain, isValid);
   }
 
   @Override
@@ -60,12 +61,17 @@ public class SingletonDomainRepository implements DomainRepository {
 
   @Override
   public boolean contains(String domain) {
-    return domains.contains(domain);
+    return domains.get(domain) != null;
   }
 
   @Override
   public boolean remove(String domain) {
     return domains.remove(domain);
+  }
+
+  @Override
+  public boolean getValidityDomain(String domain) {
+    return BooleanUtils.isTrue(domains.get(domain));
   }
 
   public DirContext getDirContext() {
@@ -98,9 +104,10 @@ public class SingletonDomainRepository implements DomainRepository {
         Attribute attr = attrs.get("mx");
         if (attr == null) {
           // This domain does not exist."
-          return false;
+          add(hostname, false);
+          return false; 
         } else {
-          add(hostname);
+          add(hostname, true);
           return true;// we have found records we are happy.
         }
       } catch (NamingException e) {
