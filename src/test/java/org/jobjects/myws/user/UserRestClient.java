@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meterware.httpunit.DeleteMethodWebRequest;
 import com.meterware.httpunit.GetMethodWebRequest;
+import com.meterware.httpunit.HttpNotFoundException;
 import com.meterware.httpunit.PutMethodWebRequest;
 import com.meterware.httpunit.WebConversation;
 import com.meterware.httpunit.WebResponse;
@@ -49,15 +50,13 @@ public class UserRestClient {
         returnValue = response.readEntity(User.class);
         LOGGER.finest("create -> userReturn=" + returnValue);
       } else {
-        LOGGER.log(Level.SEVERE,
+        LOGGER.log(Level.WARNING,
             statusType.getReasonPhrase() + " => " + (response.bufferEntity() ? response.readEntity(String.class) : StringUtils.EMPTY));
+        throw new ValidationException(statusType.getReasonPhrase() + " => " + (response.bufferEntity() ? response.readEntity(String.class) : StringUtils.EMPTY));
       }
-      
-    } catch (RuntimeException e) {
-      LOGGER.log(Level.WARNING, e.getMessage() + " user = " + ReflectionToStringBuilder.toString(user, ToStringStyle.JSON_STYLE));
+    } catch (Exception e) {
+      LOGGER.log(Level.SEVERE, e.getMessage() + " user = " + ReflectionToStringBuilder.toString(user, ToStringStyle.JSON_STYLE));
       throw new ValidationException(e.getMessage() + " user = " + ReflectionToStringBuilder.toString(user, ToStringStyle.JSON_STYLE));
-//    } catch (Exception e) {
-//      LOGGER.log(Level.SEVERE, e.getMessage(), e);
     }
     return returnValue;
   }
@@ -96,7 +95,9 @@ public class UserRestClient {
       if(200 ==  response.getResponseCode()) {//Response.Status.Family.familyOf(statusCode)
         ObjectMapper mapper = new ObjectMapper();
         returnValue = mapper.readValue(response.getInputStream(), User.class);
-      } 
+      }
+    }catch (HttpNotFoundException e) {
+      returnValue=null;
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
     }
