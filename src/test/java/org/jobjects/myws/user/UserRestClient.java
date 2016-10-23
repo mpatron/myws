@@ -44,6 +44,7 @@ public class UserRestClient {
   
   public User create(User user) throws ValidationException {
     User returnValue = null;
+    String messageValidationError=null;
     try {
       Client client = ClientBuilder.newClient();
       WebTarget webTarget = client.target(deployUrl.toString().replace("8080", REDIRECT_PORT) + "api/user");
@@ -53,13 +54,15 @@ public class UserRestClient {
         returnValue = response.readEntity(User.class);
         LOGGER.finest("create -> userReturn=" + returnValue);
       } else {
-        LOGGER.log(Level.WARNING,
-            statusType.getReasonPhrase() + " => " + (response.bufferEntity() ? response.readEntity(String.class) : StringUtils.EMPTY));
-        throw new ValidationException(statusType.getReasonPhrase() + " => " + (response.bufferEntity() ? response.readEntity(String.class) : StringUtils.EMPTY));
+        messageValidationError=statusType.getReasonPhrase() + " => " + (response.bufferEntity() ? response.readEntity(String.class) : StringUtils.EMPTY);
       }
     } catch (Exception e) {
       LOGGER.log(Level.SEVERE, e.getMessage() + " user = " + ReflectionToStringBuilder.toString(user, ToStringStyle.JSON_STYLE));
       throw new ValidationException(e.getMessage() + " user = " + ReflectionToStringBuilder.toString(user, ToStringStyle.JSON_STYLE));
+    }
+    if(messageValidationError!=null) {
+      LOGGER.log(Level.WARNING, messageValidationError);
+      throw new ValidationException(messageValidationError);
     }
     return returnValue;
   }

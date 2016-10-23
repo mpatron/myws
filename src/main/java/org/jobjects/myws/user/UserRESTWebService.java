@@ -66,11 +66,15 @@ public class UserRESTWebService {
       Validator validator = factory.getValidator();
       Set<ConstraintViolation<User>> violations = validator.validate(user);
       StringBuffer sb = new StringBuffer();
+      boolean isErrorInUser=false;
       for (ConstraintViolation<User> violation : violations) {
-        sb.append(String.format("%s: %s%n", violation.getPropertyPath(), violation.getMessage()));
-        sb.append(System.lineSeparator());
+        if(isErrorInUser) {
+          sb.append(System.lineSeparator());
+        }
+        sb.append(String.format("%s: %s", violation.getPropertyPath(), violation.getMessage()));
+        isErrorInUser=true;
       }
-      if (violations.size() == 0) {
+      if (violations.size() == 0) { /* ou isErrorInUser==false */
         List<Address> addresses = user.getAddress();
         if (0 == addresses.size()) {
           userFacade.create(user);
@@ -80,8 +84,10 @@ public class UserRESTWebService {
           for (Address address : addresses) {
             Set<ConstraintViolation<Address>> violationAddresss = validator.validate(address);
             for (ConstraintViolation<Address> violation : violationAddresss) {
-              sb.append(String.format("%s: %s%n", violation.getPropertyPath(), violation.getMessage()));
-              sb.append(System.lineSeparator());
+              if(isErrorInAddress) {
+                sb.append(System.lineSeparator());
+              }
+              sb.append(String.format("%s: %s", violation.getPropertyPath(), violation.getMessage()));
               isErrorInAddress=true;
             }
           }

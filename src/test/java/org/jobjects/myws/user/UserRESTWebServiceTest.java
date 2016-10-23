@@ -109,7 +109,7 @@ public class UserRESTWebServiceTest extends AbstractRemoteIT {
       /* end Code inatteignable */
     } catch (Exception e) {
       Assert.assertTrue(true);
-      LOGGER.log(Level.SEVERE, e.getMessage(), e);
+      LOGGER.log(Level.INFO, e.getMessage());
     }
   }
 
