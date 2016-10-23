@@ -26,6 +26,8 @@ import org.junit.runner.RunWith;
 public class RestEmailValidatorTest extends AbstractRemoteIT {
 
   private Logger LOGGER = Logger.getLogger(getClass().getName());
+  //private final static String REDIRECT_PORT = "9143";
+  private final static String REDIRECT_PORT = "8080";
 
   @ArquillianResource
   private URL deployUrl;
@@ -36,7 +38,7 @@ public class RestEmailValidatorTest extends AbstractRemoteIT {
       Client client = ClientBuilder.newClient();
       LOGGER.info("deployUrl : " + (deployUrl == null ? StringUtils.EMPTY : deployUrl.toString()));
       WebTarget webTarget = client
-          .target(deployUrl.toString().replace("8080", "9143") + "api/email/" + URLEncoder.encode("mpt@softcomputing.com", "UTF-8"));
+          .target(deployUrl.toString().replace("8080", REDIRECT_PORT) + "api/email/" + URLEncoder.encode("mpt@softcomputing.com", "UTF-8"));
       LOGGER.info("URI : " + webTarget.getUri());
       Response response = webTarget.request().get();
       StatusType statusType = response.getStatusInfo();

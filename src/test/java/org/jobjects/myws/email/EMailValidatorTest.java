@@ -25,7 +25,7 @@ public class EMailValidatorTest extends AbstractLocalIT {
   @Test
   public void testValidateEmail() {
     try {
-      Assert.assertTrue(instance.validateEmail("toto"));
+    	instance.validateEmail("toto");
     } catch (NamingException e) {
       LOGGER.log(Level.INFO, e.getLocalizedMessage(), e);
       Assert.assertTrue(true);

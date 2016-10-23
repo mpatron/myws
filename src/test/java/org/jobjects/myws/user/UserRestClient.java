@@ -34,6 +34,9 @@ public class UserRestClient {
   private static Logger LOGGER = Logger.getLogger(UserRESTWebServiceTest.class.getName());
 
   private URL deployUrl;
+
+  //private final static String REDIRECT_PORT = "9143";
+  private final static String REDIRECT_PORT = "8080";
   
   public UserRestClient(URL deployUrl) {
     this.deployUrl = deployUrl;
@@ -43,7 +46,7 @@ public class UserRestClient {
     User returnValue = null;
     try {
       Client client = ClientBuilder.newClient();
-      WebTarget webTarget = client.target(deployUrl.toString().replace("8080", "9143") + "api/user");
+      WebTarget webTarget = client.target(deployUrl.toString().replace("8080", REDIRECT_PORT) + "api/user");
       Response response = webTarget.request().post(Entity.json(user));
       StatusType statusType = response.getStatusInfo();
       if (Response.Status.Family.SUCCESSFUL.equals(Response.Status.Family.familyOf(statusType.getStatusCode()))) {
@@ -70,7 +73,7 @@ public class UserRestClient {
       mapper.setSerializationInclusion(Include.NON_NULL);
       mapper.writeValue(pos, user);
       
-      PutMethodWebRequest request = new PutMethodWebRequest(deployUrl.toString().replace("8080", "9143") + "/api/user", pis, MediaType.APPLICATION_JSON);
+      PutMethodWebRequest request = new PutMethodWebRequest(deployUrl.toString().replace("8080", REDIRECT_PORT) + "/api/user", pis, MediaType.APPLICATION_JSON);
       request.setHeaderField(HttpHeaders.CONTENT_ENCODING, "UTF-8");
       WebConversation webConversation = new WebConversation();
       WebResponse response = webConversation.getResponse(request);
@@ -88,7 +91,7 @@ public class UserRestClient {
   public User show(String email) {
     User returnValue = null;
     try {      
-      GetMethodWebRequest request = new GetMethodWebRequest(deployUrl.toString().replace("8080", "9143") + "/api/user/"+URLEncoder.encode(email, "UTF-8"));
+      GetMethodWebRequest request = new GetMethodWebRequest(deployUrl.toString().replace("8080", REDIRECT_PORT) + "/api/user/"+URLEncoder.encode(email, "UTF-8"));
       request.setHeaderField(HttpHeaders.CONTENT_ENCODING, "UTF-8");
       WebConversation webConversation = new WebConversation();
       WebResponse response = webConversation.getResponse(request);
@@ -107,7 +110,7 @@ public class UserRestClient {
   public User delete(String email) {
     User returnValue = null;
     try {      
-      DeleteMethodWebRequest request = new DeleteMethodWebRequest(deployUrl.toString().replace("8080", "9143") + "/api/user/"+URLEncoder.encode(email, "UTF-8"));
+      DeleteMethodWebRequest request = new DeleteMethodWebRequest(deployUrl.toString().replace("8080", REDIRECT_PORT) + "/api/user/"+URLEncoder.encode(email, "UTF-8"));
       request.setHeaderField(HttpHeaders.CONTENT_ENCODING, "UTF-8");
       WebConversation webConversation = new WebConversation();
       WebResponse response = webConversation.getResponse(request);

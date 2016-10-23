@@ -12,7 +12,8 @@ public class SHACheckSumExampleTest {
   @Test
   public void testMain() {
 
-    String[] args= {"D:/Utilisateurs/Mickael Patron/Documents/java/github/myws/target/classes/nofile.txt"};
+    //String[] args= {"D:/Utilisateurs/Mickael Patron/Documents/java/github/myws/target/classes/nofile.txt"};
+    String[] args= {"target/classes/nofile.txt"};
     try {
       SHACheckSumExample.main(args);
       Assert.assertTrue(true);
