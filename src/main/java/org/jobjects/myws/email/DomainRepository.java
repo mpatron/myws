@@ -1,7 +1,6 @@
 package org.jobjects.myws.email;
 
 import javax.ejb.Local;
-import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 
 @Local
@@ -11,13 +10,12 @@ public interface DomainRepository {
   void add(String domain, boolean isValid);
 
   boolean getValidityDomain(String domain);
-  
+
   int count();
 
   boolean contains(String domain);
 
   boolean remove(String domain);
-  
-  
-  public boolean validateEmail(String email) throws NamingException;
+
+  public boolean validateEmail(String email);
 }

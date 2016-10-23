@@ -1,10 +1,8 @@
 package org.jobjects.myws.email;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ejb.EJB;
-import javax.naming.NamingException;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.jobjects.myws.tools.arquillian.AbstractLocalIT;
@@ -24,24 +22,10 @@ public class EMailValidatorTest extends AbstractLocalIT {
 
   @Test
   public void testValidateEmail() {
-    try {
-    	instance.validateEmail("toto");
-    } catch (NamingException e) {
-      LOGGER.log(Level.INFO, e.getLocalizedMessage(), e);
-      Assert.assertTrue(true);
-    }
-    try {
-      Assert.assertTrue(instance.validateEmail("toto@gmail.com"));
-    } catch (NamingException e) {
-      LOGGER.log(Level.SEVERE, e.getLocalizedMessage(), e);
-      Assert.assertTrue(false);
-    }
-    try {
-      Assert.assertTrue(instance.validateEmail("toto@softcomputing.com"));
-    } catch (NamingException e) {
-      LOGGER.log(Level.SEVERE, e.getLocalizedMessage(), e);
-      Assert.assertTrue(false);
-    }
+    Assert.assertFalse(instance.validateEmail("toto"));
+    Assert.assertTrue(instance.validateEmail("toto@gmail.com"));
+    Assert.assertTrue(instance.validateEmail("toto@softcomputing.com"));
+    LOGGER.info("Fin tests email");
   }
 
 }

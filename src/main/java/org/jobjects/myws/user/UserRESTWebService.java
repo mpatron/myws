@@ -85,7 +85,7 @@ public class UserRESTWebService {
               isErrorInAddress=true;
             }
           }
-          if(!isErrorInAddress) {
+          if(isErrorInAddress) {
             LOGGER.log(Level.WARNING, sb.toString());
             returnValue = Response.status(Response.Status.BAD_REQUEST).encoding("UTF-8").entity(sb.toString()).build();
           } else {
