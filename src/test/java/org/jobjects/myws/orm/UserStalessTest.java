@@ -86,11 +86,7 @@ public class UserStalessTest extends AbstractLocalIT {
     
     User user2 = userFacade.find(user.getId());
     Assert.assertNotNull(user2);
-    /*
-     * TODO ??
-     * http://blog.developpez.com/todaystip/p12816/dev/entity-graph-de-jpa-2-1
-     */    
-    Assert.assertNotNull(user2.getAddress().size()>0);
+    Assert.assertTrue(user2.getAddress().size()>0);
 
     List<User> users = userFacade.findByFirstName("Mickaël");
     for (User user3 : users) {
