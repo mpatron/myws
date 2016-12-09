@@ -27,7 +27,7 @@
 					<systemProperties>
 						<property>
 							<name>java.util.logging.config.file</name>
-							<value>${basedir}/src/test/resources/org/jobjects/tools/log/logging.properties</value>
+							<value>${basedir}/src/test/resources/org/jobjects/myws/tools/log/logging.properties</value>
 						</property>
 						<property>
 							<name>derby.stream.error.file</name>
@@ -48,9 +48,9 @@
 		<version.junit>4.12</version.junit>
 		<version.wildfly>10.0.0.Final</version.wildfly>
 		<version.arquillian>1.1.11.Final</version.arquillian>
-		<version.shrinkwrap>2.1.1</version.shrinkwrap>
+		<version.shrinkwrap>2.2.4</version.shrinkwrap>
 		<version.picketbox>4.0.21.Final</version.picketbox>
-		<swagger-version>1.5.8</swagger-version>
+		<swagger-version>1.5.10</swagger-version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -87,13 +87,13 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.4</version>
+			<version>3.5</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.4</version>
+			<version>2.5</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
