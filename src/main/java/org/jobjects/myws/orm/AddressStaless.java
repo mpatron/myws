@@ -22,8 +22,15 @@ public class AddressStaless extends AbstractFacade<Address> implements AddressFa
 	@PersistenceContext(unitName = AppConstants.PERSISTENCE_UNIT_NAME)
 	protected EntityManager entityManager;
 
-	@Override
-	protected EntityManager getEntityManager() {
+	/**
+   * @param entityManager the entityManager to set
+   */
+  public final void setEntityManager(EntityManager entityManager) {
+    this.entityManager = entityManager;
+  }
+
+  @Override
+	public final EntityManager getEntityManager() {
 		return entityManager;
 	}
 

@@ -18,5 +18,5 @@ public interface Facade<T> {
 
 	long count();
 	
-	List<T> findByNamedQuery(final String name, Object... params);
+	List<T> findByNamedQuery(String name, Object... params);
 }

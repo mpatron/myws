@@ -48,14 +48,12 @@ public abstract class AbstractFacade<T> implements Facade<T> {
   /**
    * @return l'EntityManager.
    */
-  protected abstract EntityManager getEntityManager();
+  public abstract EntityManager getEntityManager();
 
-  /*
-   * (non-Javadoc)
-   * @see org.jobjects.orm.tools.Facade#create(T)
+  /* (non-Javadoc)
+   * @see org.jobjects.myws.orm.Facade#create(java.lang.Object)
    */
-  @Override
-  public final void create(final T entity) {
+  public void create(final T entity) {
     EntityTransaction trx = null;
     if (PersistenceContextType.EXTENDED.equals(transactionLocal)) {
       trx = getEntityManager().getTransaction();
@@ -75,12 +73,10 @@ public abstract class AbstractFacade<T> implements Facade<T> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.jobjects.orm.tools.Facade#save(T)
+  /* (non-Javadoc)
+   * @see org.jobjects.myws.orm.Facade#save(java.lang.Object)
    */
-  @Override
-  public final T save(final T entity) {
+  public T save(final T entity) {
     T returnValue = null;
     EntityTransaction trx = null;
     if (PersistenceContextType.EXTENDED.equals(transactionLocal)) {
@@ -102,12 +98,10 @@ public abstract class AbstractFacade<T> implements Facade<T> {
     return returnValue;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.jobjects.orm.tools.Facade#remove(T)
+  /* (non-Javadoc)
+   * @see org.jobjects.myws.orm.Facade#remove(java.lang.Object)
    */
-  @Override
-  public final void remove(final T entity) {
+  public void remove(final T entity) {
     EntityTransaction trx = null;
     if (PersistenceContextType.EXTENDED.equals(transactionLocal)) {
       trx = getEntityManager().getTransaction();
@@ -127,33 +121,27 @@ public abstract class AbstractFacade<T> implements Facade<T> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.jobjects.orm.tools.Facade#find(java.lang.Object)
+  /* (non-Javadoc)
+   * @see org.jobjects.myws.orm.Facade#find(java.lang.Object)
    */
-  @Override
-  public final T find(final Object id) {
+  public T find(final Object id) {
     return getEntityManager().find(entityClass, id);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.jobjects.orm.tools.Facade#findAll()
+  /* (non-Javadoc)
+   * @see org.jobjects.myws.orm.Facade#findAll()
    */
-  @Override
-  public final List<T> findAll() {
+  public List<T> findAll() {
     CriteriaQuery<T> cq = getEntityManager().getCriteriaBuilder()
         .createQuery(entityClass);
     cq.select(cq.from(entityClass));
     return getEntityManager().createQuery(cq).getResultList();
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.jobjects.orm.tools.Facade#findRange(int[])
+  /* (non-Javadoc)
+   * @see org.jobjects.myws.orm.Facade#findRange(int, int)
    */
-  @Override
-  public final List<T> findRange(final int rangeMin, final int rangeMax) {
+  public List<T> findRange(final int rangeMin, final int rangeMax) {
     CriteriaQuery<T> cq = getEntityManager().getCriteriaBuilder()
         .createQuery(entityClass);
     cq.select(cq.from(entityClass));
@@ -163,25 +151,20 @@ public abstract class AbstractFacade<T> implements Facade<T> {
     return q.getResultList();
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.jobjects.orm.tools.Facade#count()
+  /* (non-Javadoc)
+   * @see org.jobjects.myws.orm.Facade#count()
    */
-  @Override
-  public final long count() {
+  public long count() {
     CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
     CriteriaQuery<Long> cq = cb.createQuery(Long.class);
     cq.select(cb.count(cq.from(entityClass)));
     return getEntityManager().createQuery(cq).getSingleResult();
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.jobjects.myws.orm.Facade#findByNamedQuery(java.lang.String,
-   * java.lang.Object[])
+  /* (non-Javadoc)
+   * @see org.jobjects.myws.orm.Facade#findByNamedQuery(java.lang.String, java.lang.Object[])
    */
-  @Override
-  public final List<T> findByNamedQuery(final String name,
+  public List<T> findByNamedQuery(final String name,
       final Object... params) {
     TypedQuery<T> query = getEntityManager().createNamedQuery(name,
         entityClass);
