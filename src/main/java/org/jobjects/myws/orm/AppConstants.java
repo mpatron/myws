@@ -1,8 +1,8 @@
 package org.jobjects.myws.orm;
 
 public interface AppConstants {
-	final static String PERSISTENCE_UNIT_NAME="myPersistence";
-	final static String SCHEMA_NAME="APP";
-	final static String DATABASE_USERNAME="APP";
-	final static String DATABASE_PASSWORD="APP";
+  String PERSISTENCE_UNIT_NAME="myPersistence";
+  String SCHEMA_NAME="APP";
+  String DATABASE_USERNAME="APP";
+  String DATABASE_PASSWORD="APP";
 }

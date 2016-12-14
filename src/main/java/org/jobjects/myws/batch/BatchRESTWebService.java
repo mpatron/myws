@@ -29,11 +29,11 @@ import io.swagger.annotations.Api;
 @Tracked
 public class BatchRESTWebService {
   private transient Logger LOGGER = Logger.getLogger(getClass().getName());
-  
-	public static void main(String[] args) {
-	  BatchRESTWebService batchMain = new BatchRESTWebService();
-	  batchMain.dojob(null);
-	}
+
+  public static void main(String[] args) {
+    BatchRESTWebService batchMain = new BatchRESTWebService();
+    batchMain.dojob(null);
+  }
 
   @GET
   @Consumes(MediaType.APPLICATION_JSON)

@@ -3,6 +3,10 @@ package org.jobjects.myws.batch;
 import javax.batch.api.chunk.AbstractItemReader;
 import javax.inject.Named;
 
+/**
+ * @author mickael
+ *
+ */
 @Named
 public class MyReader extends AbstractItemReader {
 

@@ -28,7 +28,7 @@ public class AddressStaless extends AbstractFacade<Address> implements AddressFa
 	}
 
 	 /**
-   * @see be.bzbit.framework.domain.repository.GenericRepository
+   * @see org.jobjects.myws.orm.AddressFacade
    *      #findByNamedQuery(java.lang.String, java.lang.Object[])
    */
   public List<Address> findByFirstName(final User user) {

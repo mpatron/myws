@@ -60,8 +60,10 @@
 								<configLocation>config/maven_checks.xml</configLocation>
 								<configLocation>file:///D:/ProjetsJava/JValidation/src/test/resources/mp_checks.xml</configLocation>
 								<configLocation>mp_checks.xml</configLocation>
-							 -->
-							 <configLocation>src/test/resources/google_checks.xml</configLocation>
+                                                            <configLocation>src/test/resources/google_checks.xml</configLocation>
+                                                         <configLocation>google_checks.xml</configLocation>
+							 -->							 
+                                                         <configLocation>sun_checks.xml</configLocation>
 								
 							</configuration>
 						</plugin>

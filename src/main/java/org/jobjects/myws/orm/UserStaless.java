@@ -26,9 +26,8 @@ public class UserStaless extends AbstractFacade<User> implements UserFacade {
 		return entityManager;
 	}
 
-	 /**
-   * @see be.bzbit.framework.domain.repository.GenericRepository
-   *      #findByNamedQuery(java.lang.String, java.lang.Object[])
+  /* (non-Javadoc)
+   * @see org.jobjects.myws.orm.UserFacade#findByFirstName(java.lang.String)
    */
   public List<User> findByFirstName(final String firstName) {
     TypedQuery<User> query = getEntityManager().createNamedQuery(User.FIND_BY_FIRSTNAME, User.class);
