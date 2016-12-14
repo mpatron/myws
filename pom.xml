@@ -36,7 +36,85 @@
 					</systemProperties>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.6</version>
+				<configuration>
+					<reportPlugins>
+						<plugin>
+							<!-- javadoc. -->
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-javadoc-plugin</artifactId>
+							<version>2.10.4</version>
+						</plugin>
+
+						<plugin>
+							<!-- vérifier la qualité du code avec checkstyle. -->
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-checkstyle-plugin</artifactId>
+							<version>2.17</version>
+							<configuration>
+							<!-- 
+								<configLocation>config/sun_checks.xml</configLocation>
+								<configLocation>config/maven_checks.xml</configLocation>
+								<configLocation>file:///D:/ProjetsJava/JValidation/src/test/resources/mp_checks.xml</configLocation>
+								<configLocation>mp_checks.xml</configLocation>
+							 -->
+							 <configLocation>src/test/resources/google_checks.xml</configLocation>
+								
+							</configuration>
+						</plugin>
+                                                <!-- générer un rapport de couverture des tests. -->
+                                                <!--
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>cobertura-maven-plugin</artifactId>
+							<version>2.7</version>                                                        
+                                                        <configuration>
+								<instrumentation>
+								<includes></includes>
+								<excludes>
+									<exclude>org.jobjects.myws.orm.UserStalessTest</exclude>
+                                                                        <exclude>org.jobjects.myws.email.RestEmailValidatorTest</exclude>
+                                                                        <exclude>org.jobjects.myws.email.EMailValidatorTest</exclude>
+                                                                        <exclude>org.jobjects.myws.user.UserRESTWebServiceTest</exclude>
+								</excludes>
+								</instrumentation>
+                                                        </configuration>
+						</plugin>
+                                                -->
+						<plugin>
+							<!-- vérifier la qualité du code avec PMD. -->
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-pmd-plugin</artifactId>
+							<version>3.7</version>
+							<configuration>
+								<targetJdk>${compileSource}</targetJdk>
+							</configuration>
+						</plugin>
+					</reportPlugins>
+				</configuration>
+			</plugin>                        
 		</plugins>
+                <!--
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>2.17</version>
+          <dependencies>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>7.3</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    -->
 	</build>
 	<packaging>war</packaging>
 	<properties>
