@@ -1,8 +1,7 @@
 /**
+ * Gestion des utilisateurs.
+ * @author Mickaël Patron
+ * @version 2016-05-08
  * 
- */
-/**
- * @author Mickael
- *
- */
+ **/
 package org.jobjects.myws.user;

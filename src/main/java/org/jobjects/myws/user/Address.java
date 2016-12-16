@@ -1,7 +1,6 @@
 package org.jobjects.myws.user;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,21 +13,33 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
-
 import org.jobjects.myws.orm.AbstractUUIDBaseEntity;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * Table des adresses.
+ * @author Mickaël Patron
+ * @version 2016-05-08
+ *
+ */
 @Entity
-@Table(name = "ADDRESS", indexes = { @Index(name = "idx_address_unique", columnList = "user_uuid_id,type", unique = true) })
+@Table(
+    name = "ADDRESS",
+    indexes = {
+        @Index(
+            name = "idx_address_unique",
+            columnList = "user_uuid_id,type",
+            unique = true) })
 @NamedQueries({
-    @NamedQuery(name = Address.FIND_BY_USER, query = "select t from Address t where t.user = :user"),
-    @NamedQuery(name = Address.FIND_BY_USER_TYPE, query = "select t from Address t where t.user = ?1 and t.type = ?2") })
+    @NamedQuery(
+        name = Address.FIND_BY_USER,
+        query = "select t from Address t where t.user = :user"),
+    @NamedQuery(
+        name = Address.FIND_BY_USER_TYPE,
+        query = "select t from Address t where t.user = ?1 and t.type = ?2") })
 public class Address extends AbstractUUIDBaseEntity implements Serializable {
-
-  public final static String FIND_BY_USER = "Address.findByUser";
-  public final static String FIND_BY_USER_TYPE = "Address.findByUserType";
-
+  public static final String FIND_BY_USER = "Address.findByUser";
+  public static final String FIND_BY_USER_TYPE = "Address.findByUserType";
   /**
    * 
    */
@@ -40,15 +51,20 @@ public class Address extends AbstractUUIDBaseEntity implements Serializable {
   @Enumerated(EnumType.STRING)
   @Column(length = 4)
   private AddressEnum type;
-  @Size(max = 80, message = "La longueur de street est inférieur à 80 caractères.")
+  @Size(
+      max = 80,
+      message = "La longueur de street est inférieur à 80 caractères.")
   private String street;
-  @Size(max = 40, message = "La longueur de city est inférieur à 40 caractères.")
+  @Size(
+      max = 40,
+      message = "La longueur de city est inférieur à 40 caractères.")
   private String city;
   @Size(max = 2, message = "La longueur de state est inférieur à 2 caractères.")
   private String state;
-  @Size(max = 20, message = "La longueur de postcode est inférieur à 20 caractères.")
+  @Size(
+      max = 20,
+      message = "La longueur de postcode est inférieur à 20 caractères.")
   private String postcode;
-
   @JsonIgnore
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(
@@ -59,7 +75,7 @@ public class Address extends AbstractUUIDBaseEntity implements Serializable {
   /**
    * @return the type
    */
-  public AddressEnum getType() {
+  public final AddressEnum getType() {
     return type;
   }
 
@@ -67,14 +83,14 @@ public class Address extends AbstractUUIDBaseEntity implements Serializable {
    * @param type
    *          the type to set
    */
-  public void setType(AddressEnum type) {
+  public final void setType(final AddressEnum type) {
     this.type = type;
   }
 
   /**
    * @return the street
    */
-  public String getStreet() {
+  public final String getStreet() {
     return street;
   }
 
@@ -82,14 +98,14 @@ public class Address extends AbstractUUIDBaseEntity implements Serializable {
    * @param street
    *          the street to set
    */
-  public void setStreet(String street) {
+  public final void setStreet(final String street) {
     this.street = street;
   }
 
   /**
    * @return the city
    */
-  public String getCity() {
+  public final String getCity() {
     return city;
   }
 
@@ -97,14 +113,14 @@ public class Address extends AbstractUUIDBaseEntity implements Serializable {
    * @param city
    *          the city to set
    */
-  public void setCity(String city) {
+  public final void setCity(final String city) {
     this.city = city;
   }
 
   /**
    * @return the state
    */
-  public String getState() {
+  public final String getState() {
     return state;
   }
 
@@ -112,7 +128,7 @@ public class Address extends AbstractUUIDBaseEntity implements Serializable {
    * @param state
    *          the state to set
    */
-  public void setState(String state) {
+  public void setState(final String state) {
     this.state = state;
   }
 
@@ -145,5 +161,4 @@ public class Address extends AbstractUUIDBaseEntity implements Serializable {
   public void setUser(User user) {
     this.user = user;
   }
-
 }

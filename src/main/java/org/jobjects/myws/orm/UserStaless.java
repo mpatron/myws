@@ -24,6 +24,9 @@ public class UserStaless extends AbstractFacade<User> implements UserFacade {
     super(User.class);
   }
 
+  /**
+   * EntityManager de serveur J2EE.
+   */
   @PersistenceContext(unitName = AppConstants.PERSISTENCE_UNIT_NAME)
   private EntityManager entityManager;
 
@@ -35,6 +38,9 @@ public class UserStaless extends AbstractFacade<User> implements UserFacade {
     this.entityManager = entityManager;
   }
 
+  /* (non-Javadoc)
+   * @see org.jobjects.myws.orm.AbstractFacade#getEntityManager()
+   */
   @Override
   public final EntityManager getEntityManager() {
     return entityManager;

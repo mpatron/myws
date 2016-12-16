@@ -50,7 +50,8 @@ public abstract class AbstractFacade<T> implements Facade<T> {
    */
   public abstract EntityManager getEntityManager();
 
-  /* (non-Javadoc)
+  /**
+   * (non-Javadoc)
    * @see org.jobjects.myws.orm.Facade#create(java.lang.Object)
    */
   public void create(final T entity) {
@@ -73,7 +74,8 @@ public abstract class AbstractFacade<T> implements Facade<T> {
     }
   }
 
-  /* (non-Javadoc)
+  /**
+   * (non-Javadoc)
    * @see org.jobjects.myws.orm.Facade#save(java.lang.Object)
    */
   public T save(final T entity) {

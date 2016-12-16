@@ -28,8 +28,11 @@ public class UserReader implements MessageBodyReader<User> {
    */
   private transient Logger logger = Logger.getLogger(getClass().getName());
 
-  /* (non-Javadoc)
-   * @see javax.ws.rs.ext.MessageBodyReader#isReadable(java.lang.Class, java.lang.reflect.Type, java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType)
+  /*
+   * (non-Javadoc)
+   * @see javax.ws.rs.ext.MessageBodyReader#isReadable(java.lang.Class,
+   * java.lang.reflect.Type, java.lang.annotation.Annotation[],
+   * javax.ws.rs.core.MediaType)
    */
   @Override
   public boolean isReadable(Class<?> type, Type type1, Annotation[] antns,
@@ -37,8 +40,12 @@ public class UserReader implements MessageBodyReader<User> {
     return User.class.isAssignableFrom(type);
   }
 
-  /* (non-Javadoc)
-   * @see javax.ws.rs.ext.MessageBodyReader#readFrom(java.lang.Class, java.lang.reflect.Type, java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType, javax.ws.rs.core.MultivaluedMap, java.io.InputStream)
+  /*
+   * (non-Javadoc)
+   * @see javax.ws.rs.ext.MessageBodyReader#readFrom(java.lang.Class,
+   * java.lang.reflect.Type, java.lang.annotation.Annotation[],
+   * javax.ws.rs.core.MediaType, javax.ws.rs.core.MultivaluedMap,
+   * java.io.InputStream)
    */
   @Override
   public User readFrom(Class<User> type, Type type1, Annotation[] antns,

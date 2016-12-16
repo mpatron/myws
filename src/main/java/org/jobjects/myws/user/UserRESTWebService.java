@@ -35,7 +35,10 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 /**
- * @author Mickaël PATRON 2014
+ * Service web des utilisateurs.
+ * @author Mickaël Patron
+ * @version 2016-05-08
+ * 
  **/
 @Api(value = "/user", description = "Operations about user")
 @Path("/user")

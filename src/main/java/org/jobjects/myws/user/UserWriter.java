@@ -29,8 +29,11 @@ public class UserWriter implements MessageBodyWriter<User> {
    */
   private transient Logger logger = Logger.getLogger(getClass().getName());
 
-  /* (non-Javadoc)
-   * @see javax.ws.rs.ext.MessageBodyWriter#isWriteable(java.lang.Class, java.lang.reflect.Type, java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType)
+  /*
+   * (non-Javadoc)
+   * @see javax.ws.rs.ext.MessageBodyWriter#isWriteable(java.lang.Class,
+   * java.lang.reflect.Type, java.lang.annotation.Annotation[],
+   * javax.ws.rs.core.MediaType)
    */
   @Override
   public boolean isWriteable(Class<?> type, Type genericType,
@@ -41,8 +44,11 @@ public class UserWriter implements MessageBodyWriter<User> {
     return User.class.isAssignableFrom(type);
   }
 
-  /* (non-Javadoc)
-   * @see javax.ws.rs.ext.MessageBodyWriter#getSize(java.lang.Object, java.lang.Class, java.lang.reflect.Type, java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType)
+  /*
+   * (non-Javadoc)
+   * @see javax.ws.rs.ext.MessageBodyWriter#getSize(java.lang.Object,
+   * java.lang.Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
+   * javax.ws.rs.core.MediaType)
    */
   @Override
   public long getSize(User t, Class<?> type, Type type1, Annotation[] antns,
@@ -55,8 +61,12 @@ public class UserWriter implements MessageBodyWriter<User> {
     return -1;
   }
 
-  /* (non-Javadoc)
-   * @see javax.ws.rs.ext.MessageBodyWriter#writeTo(java.lang.Object, java.lang.Class, java.lang.reflect.Type, java.lang.annotation.Annotation[], javax.ws.rs.core.MediaType, javax.ws.rs.core.MultivaluedMap, java.io.OutputStream)
+  /*
+   * (non-Javadoc)
+   * @see javax.ws.rs.ext.MessageBodyWriter#writeTo(java.lang.Object,
+   * java.lang.Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
+   * javax.ws.rs.core.MediaType, javax.ws.rs.core.MultivaluedMap,
+   * java.io.OutputStream)
    */
   @Override
   public void writeTo(User user, Class<?> type, Type type1, Annotation[] antns,
