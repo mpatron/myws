@@ -30,6 +30,9 @@ public class JObjectsLogFormatter extends Formatter {
   public static void initializeLogging() {
     final String filePathnameLogging = "/org/jobjects/myws/tools/log/logging.properties";
     try (InputStream is = JObjectsLogFormatter.class.getResourceAsStream(filePathnameLogging)) {
+      if(null == is) {
+        Logger.getLogger(JObjectsLogFormatter.class.getName()).severe("La ressource " + filePathnameLogging + " est introuvable.");
+      }
       LogManager.getLogManager().readConfiguration(is);
       Logger.getLogger(JObjectsLogFormatter.class.getName()).config("Chargement realisé de " + filePathnameLogging);
     } catch (Exception e) {

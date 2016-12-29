@@ -38,7 +38,7 @@ public class RestApplicationConfiguration extends Application {
     beanConfig.setResourcePackage("org.jobjects.myws");
     beanConfig.setScan(true);
   }
-  
+
   @Override
   public Set<Class<?>> getClasses() {
       Set<Class<?>> resources = new HashSet<Class<?>>();

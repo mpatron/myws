@@ -21,7 +21,7 @@ public abstract class AbstractUUIDBaseEntity implements Serializable {
    */
   @Id
   @Column(name = "UUID_ID", nullable = false, length = 36)
-  protected String id;
+  private String id;
 
   /**
    * @return the id

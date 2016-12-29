@@ -41,7 +41,7 @@ public class Address extends AbstractUUIDBaseEntity implements Serializable {
   public static final String FIND_BY_USER = "Address.findByUser";
   public static final String FIND_BY_USER_TYPE = "Address.findByUserType";
   /**
-   * 
+   * Numero de série
    */
   private static final long serialVersionUID = -598324264166203579L;
 

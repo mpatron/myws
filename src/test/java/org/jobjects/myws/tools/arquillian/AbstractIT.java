@@ -102,7 +102,7 @@ public abstract class AbstractIT {
     // prefix);
     // war.addPackages(false,
     // Filters.exclude("(.*)Test.class|"+AbstractIT.class.getPackage().getName()+"(.*)"),
-    // prefix);
+    // prefix);    
     war.addPackages(false, Filters.exclude(CliUtils.class.getPackage()), prefix);
     for (File file : dir.listFiles()) {
       if (file.isDirectory()) {
