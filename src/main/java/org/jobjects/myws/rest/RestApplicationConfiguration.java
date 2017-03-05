@@ -25,7 +25,7 @@ import io.swagger.jaxrs.config.BeanConfig;
  * @author Mickaël PATRON 2014
  *
  */
-@ApplicationPath("api")
+@ApplicationPath("/api")
 public class RestApplicationConfiguration extends Application {
   
   public RestApplicationConfiguration() {

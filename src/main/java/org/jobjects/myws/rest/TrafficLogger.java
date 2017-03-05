@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -100,11 +100,11 @@ public class TrafficLogger implements ContainerRequestFilter, ContainerResponseF
 
       MultivaluedMap<String, String> headers = requestContext.getHeaders();
       JsonObjectBuilder jsonHeaders = Json.createObjectBuilder();
-      for (String key : headers.keySet()) {
-        List<String> valueList = headers.get(key);
-        if (valueList != null) {
-          jsonHeaders.add(key, Arrays.toString(valueList.toArray()));
+      for (Entry<String, List<String>> entry : headers.entrySet()) {
+        if(entry.getValue()!=null) {
+          jsonHeaders.add(entry.getKey(), Arrays.toString(entry.getValue().toArray()));
         }
+        
       }
       json.add("Headers", jsonHeaders);
 

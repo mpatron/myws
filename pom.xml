@@ -60,11 +60,10 @@
 								<configLocation>config/maven_checks.xml</configLocation>
 								<configLocation>file:///D:/ProjetsJava/JValidation/src/test/resources/mp_checks.xml</configLocation>
 								<configLocation>mp_checks.xml</configLocation>
-                                                            <configLocation>src/test/resources/google_checks.xml</configLocation>
-                                                         <configLocation>sun_checks.xml</configLocation>
+								<configLocation>src/test/resources/google_checks.xml</configLocation>
+								<configLocation>sun_checks.xml</configLocation>
 							 -->							 
-                                                         <configLocation>google_checks.xml</configLocation>
-								
+								<configLocation>google_checks.xml</configLocation>								
 							</configuration>
 						</plugin>
                                                 <!-- générer un rapport de couverture des tests. -->
@@ -95,6 +94,13 @@
 								<targetJdk>${compileSource}</targetJdk>
 							</configuration>
 						</plugin>
+						<!-- mvn findbugs:check -->
+						<!-- mvn findbugs:gui -->
+	<plugin>
+		<groupId>org.codehaus.mojo</groupId>
+		<artifactId>findbugs-maven-plugin</artifactId>
+		<version>3.0.4</version>
+	</plugin>						
 					</reportPlugins>
 				</configuration>
 			</plugin>                        
