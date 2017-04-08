@@ -12,7 +12,7 @@
 
 #IDEA
 .idea
-.iml
+*.iml
 
 # Maven 
 target
