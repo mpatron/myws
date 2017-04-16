@@ -9,9 +9,10 @@ import java.util.logging.Formatter;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.jboss.logmanager.Level;
 
 /**
  * Logger. Logger LOGGER =
@@ -23,6 +24,15 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
  */
 public class JObjectsLogFormatter extends Formatter {
   private static final DateFormat format = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
+  public static final String ANSI_RESET = "\u001B[0m";
+  public static final String ANSI_BLACK = "\u001B[30m";
+  public static final String ANSI_RED = "\u001B[31m";
+  public static final String ANSI_GREEN = "\u001B[32m";
+  public static final String ANSI_YELLOW = "\u001B[33m";
+  public static final String ANSI_BLUE = "\u001B[34m";
+  public static final String ANSI_PURPLE = "\u001B[35m";
+  public static final String ANSI_CYAN = "\u001B[36m";
+  public static final String ANSI_WHITE = "\u001B[37m";
 
   /**
    * Attention, il faut rendre la methode appelable 1 fois.
@@ -30,7 +40,7 @@ public class JObjectsLogFormatter extends Formatter {
   public static void initializeLogging() {
     final String filePathnameLogging = "/org/jobjects/myws/tools/log/logging.properties";
     try (InputStream is = JObjectsLogFormatter.class.getResourceAsStream(filePathnameLogging)) {
-      if(null == is) {
+      if (null == is) {
         Logger.getLogger(JObjectsLogFormatter.class.getName()).severe("La ressource " + filePathnameLogging + " est introuvable.");
       }
       LogManager.getLogManager().readConfiguration(is);
@@ -46,27 +56,44 @@ public class JObjectsLogFormatter extends Formatter {
     if (loggerName == null) {
       loggerName = "root";
     }
-
-    StringBuilder output = new StringBuilder().append(StringUtils.rightPad("[" + record.getLevel().getName() + "]", 9))
+    StringBuilder output = new StringBuilder();
+    if (SystemUtils.IS_OS_UNIX) {
+      if (Level.FINEST.equals(record.getLevel())) {
+        output.append(StringUtils.rightPad(ANSI_GREEN + "[" + record.getLevel().getName() + "]" + ANSI_RESET, 9));
+      } else if (Level.FINER.equals(record.getLevel())) {
+        output.append(StringUtils.rightPad(ANSI_GREEN + "[" + record.getLevel().getName() + "]" + ANSI_RESET, 9));
+      } else if (Level.FINE.equals(record.getLevel())) {
+        output.append(StringUtils.rightPad(ANSI_GREEN + "[" + record.getLevel().getName() + "]" + ANSI_RESET, 9));
+      } else if (Level.CONFIG.equals(record.getLevel())) {
+        output.append(StringUtils.rightPad(ANSI_PURPLE + "[" + record.getLevel().getName() + "]" + ANSI_RESET, 9));
+      } else if (Level.INFO.equals(record.getLevel())) {
+        output.append(StringUtils.rightPad(ANSI_BLUE + "[" + record.getLevel().getName() + "]" + ANSI_RESET, 9));
+      } else if (Level.WARNING.equals(record.getLevel())) {
+        output.append(StringUtils.rightPad(ANSI_YELLOW + "[" + record.getLevel().getName() + "]" + ANSI_RESET, 9));
+      } else if (Level.SEVERE.equals(record.getLevel())) {
+        output.append(StringUtils.rightPad(ANSI_RED + "[" + record.getLevel().getName() + "]" + ANSI_RESET, 9));
+      } else {
+        output.append(StringUtils.rightPad("[" + record.getLevel().getName() + "]", 9));
+      }
+    } else {
+      output.append(StringUtils.rightPad("[" + record.getLevel().getName() + "]", 9));
+    }
+    output
         // .append(Thread.currentThread().getName()).append('|')
         // .append(" ").append(loggerName).append(" ")
         .append(" " + format.format(new Date(record.getMillis()))).append(" : ").append("..."
             + StringUtils.substringAfterLast(record.getSourceClassName(), "org.jobjects.") + "." + record.getSourceMethodName() + "()")
         .append(" : ");
-
     if (record.getParameters() != null) {
       output.append(MessageFormat.format(record.getMessage(), record.getParameters()));
     } else {
       output.append(record.getMessage());
     }
-
     if (record.getThrown() != null) {
       output.append(System.lineSeparator());
       output.append(ExceptionUtils.getStackTrace(record.getThrown()));
     }
-
     output.append(System.lineSeparator());
     return output.toString();
   }
-
 }

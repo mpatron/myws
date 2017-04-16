@@ -41,6 +41,7 @@
 				<artifactId>maven-site-plugin</artifactId>
 				<version>3.6</version>
 				<configuration>
+
 					<reportPlugins>
 						<plugin>
 							<!-- javadoc. -->
@@ -311,6 +312,7 @@
 				</dependency>
 			</dependencies>
 		</profile>
+		<!--
 		<profile>
 			<id>wildfly-remote-arquillian-ng</id>
 			<dependencies>
@@ -321,5 +323,6 @@
 				</dependency>
 			</dependencies>
 		</profile>
+		-->
 	</profiles>
 </project>
