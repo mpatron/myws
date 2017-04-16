@@ -59,19 +59,19 @@ public class JObjectsLogFormatter extends Formatter {
     StringBuilder output = new StringBuilder();
     if (SystemUtils.IS_OS_UNIX) {
       if (Level.FINEST.equals(record.getLevel())) {
-        output.append(StringUtils.rightPad(ANSI_GREEN + "[" + record.getLevel().getName() + "]" + ANSI_RESET, 9));
+        output.append(StringUtils.rightPad("[" + ANSI_GREEN + record.getLevel().getName() + ANSI_RESET + "]", 9));
       } else if (Level.FINER.equals(record.getLevel())) {
-        output.append(StringUtils.rightPad(ANSI_GREEN + "[" + record.getLevel().getName() + "]" + ANSI_RESET, 9));
+        output.append(StringUtils.rightPad("[" + ANSI_GREEN + record.getLevel().getName() + ANSI_RESET + "]", 9));
       } else if (Level.FINE.equals(record.getLevel())) {
-        output.append(StringUtils.rightPad(ANSI_GREEN + "[" + record.getLevel().getName() + "]" + ANSI_RESET, 9));
+        output.append(StringUtils.rightPad("[" + ANSI_GREEN + record.getLevel().getName() + ANSI_RESET + "]", 9));
       } else if (Level.CONFIG.equals(record.getLevel())) {
-        output.append(StringUtils.rightPad(ANSI_PURPLE + "[" + record.getLevel().getName() + "]" + ANSI_RESET, 9));
+        output.append(StringUtils.rightPad("[" + ANSI_PURPLE + record.getLevel().getName() + ANSI_RESET + "]", 9));
       } else if (Level.INFO.equals(record.getLevel())) {
-        output.append(StringUtils.rightPad(ANSI_BLUE + "[" + record.getLevel().getName() + "]" + ANSI_RESET, 9));
+        output.append(StringUtils.rightPad("[" + ANSI_BLUE + record.getLevel().getName() + ANSI_RESET + "]", 9));
       } else if (Level.WARNING.equals(record.getLevel())) {
-        output.append(StringUtils.rightPad(ANSI_YELLOW + "[" + record.getLevel().getName() + "]" + ANSI_RESET, 9));
+        output.append(StringUtils.rightPad("[" + ANSI_YELLOW + record.getLevel().getName() + ANSI_RESET + "]", 9));
       } else if (Level.SEVERE.equals(record.getLevel())) {
-        output.append(StringUtils.rightPad(ANSI_RED + "[" + record.getLevel().getName() + "]" + ANSI_RESET, 9));
+        output.append(StringUtils.rightPad("[" + ANSI_RED + record.getLevel().getName() + ANSI_RESET + "]", 9));
       } else {
         output.append(StringUtils.rightPad("[" + record.getLevel().getName() + "]", 9));
       }
