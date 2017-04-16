@@ -91,7 +91,7 @@ public class JObjectsLogFormatter extends Formatter {
     }
     if (record.getThrown() != null) {
       output.append(System.lineSeparator());
-      output.append(ExceptionUtils.getStackTrace(record.getThrown()));
+      output.append(ANSI_RED + ExceptionUtils.getStackTrace(record.getThrown()) + ANSI_RESET);
     }
     output.append(System.lineSeparator());
     return output.toString();
