@@ -22,6 +22,7 @@ public class EMailValidatorTest extends AbstractLocalIT {
 
   @Test
   public void testValidateEmail() {
+    LOGGER.info("Start tests email");
     Assert.assertFalse(instance.validateEmail("toto"));
     Assert.assertTrue(instance.validateEmail("toto@gmail.com"));
     Assert.assertTrue(instance.validateEmail("toto@softcomputing.com"));

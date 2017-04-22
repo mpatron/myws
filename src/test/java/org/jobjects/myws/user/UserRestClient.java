@@ -28,8 +28,7 @@ import com.meterware.httpunit.WebConversation;
 import com.meterware.httpunit.WebResponse;
 
 public class UserRestClient {
-  private static Logger LOGGER = Logger
-      .getLogger(UserRESTWebServiceTest.class.getName());
+  private static Logger LOGGER = Logger.getLogger(UserRESTWebServiceTest.class.getName());
   private URL deployUrl;
   // private final static String REDIRECT_PORT = "9143";
   private final static String REDIRECT_PORT = "8080";
@@ -43,24 +42,19 @@ public class UserRestClient {
     String messageValidationError = null;
     try {
       Client client = ClientBuilder.newClient();
-      WebTarget webTarget = client.target(
-          deployUrl.toString().replace("8080", REDIRECT_PORT) + "api/user");
+      WebTarget webTarget = client.target(deployUrl.toString().replace("8080", REDIRECT_PORT) + "api/user");
       Response response = webTarget.request().post(Entity.json(user));
       StatusType statusType = response.getStatusInfo();
-      if (Response.Status.Family.SUCCESSFUL.equals(
-          Response.Status.Family.familyOf(statusType.getStatusCode()))) {
+      if (Response.Status.Family.SUCCESSFUL.equals(Response.Status.Family.familyOf(statusType.getStatusCode()))) {
         returnValue = response.readEntity(User.class);
         LOGGER.finest("create -> userReturn=" + returnValue);
       } else {
         messageValidationError = statusType.getReasonPhrase() + " => "
-            + (response.bufferEntity() ? response.readEntity(String.class)
-                : StringUtils.EMPTY);
+            + (response.bufferEntity() ? response.readEntity(String.class) : StringUtils.EMPTY);
       }
     } catch (Exception e) {
-      LOGGER.log(Level.SEVERE, e.getMessage() + " user = "
-          + ReflectionToStringBuilder.toString(user, ToStringStyle.JSON_STYLE));
-      throw new ValidationException(e.getMessage() + " user = "
-          + ReflectionToStringBuilder.toString(user, ToStringStyle.JSON_STYLE));
+      LOGGER.log(Level.SEVERE, e.getMessage() + " user = " + ReflectionToStringBuilder.toString(user, ToStringStyle.JSON_STYLE));
+      throw new ValidationException(e.getMessage() + " user = " + ReflectionToStringBuilder.toString(user, ToStringStyle.JSON_STYLE));
     }
     if (messageValidationError != null) {
       LOGGER.log(Level.WARNING, messageValidationError);
@@ -77,9 +71,8 @@ public class UserRestClient {
       ObjectMapper mapper = new ObjectMapper();
       mapper.setSerializationInclusion(Include.NON_NULL);
       mapper.writeValue(pos, user);
-      PutMethodWebRequest request = new PutMethodWebRequest(
-          deployUrl.toString().replace("8080", REDIRECT_PORT) + "/api/user",
-          pis, MediaType.APPLICATION_JSON);
+      PutMethodWebRequest request = new PutMethodWebRequest(deployUrl.toString().replace("8080", REDIRECT_PORT) + "/api/user", pis,
+          MediaType.APPLICATION_JSON);
       request.setHeaderField(HttpHeaders.CONTENT_ENCODING, "UTF-8");
       WebConversation webConversation = new WebConversation();
       WebResponse response = webConversation.getResponse(request);
@@ -98,8 +91,7 @@ public class UserRestClient {
     User returnValue = null;
     try {
       GetMethodWebRequest request = new GetMethodWebRequest(
-          deployUrl.toString().replace("8080", REDIRECT_PORT) + "/api/user/"
-              + URLEncoder.encode(email, "UTF-8"));
+          deployUrl.toString().replace("8080", REDIRECT_PORT) + "/api/user/" + URLEncoder.encode(email, "UTF-8"));
       request.setHeaderField(HttpHeaders.CONTENT_ENCODING, "UTF-8");
       WebConversation webConversation = new WebConversation();
       WebResponse response = webConversation.getResponse(request);
@@ -119,8 +111,7 @@ public class UserRestClient {
     User returnValue = null;
     try {
       DeleteMethodWebRequest request = new DeleteMethodWebRequest(
-          deployUrl.toString().replace("8080", REDIRECT_PORT) + "/api/user/"
-              + URLEncoder.encode(email, "UTF-8"));
+          deployUrl.toString().replace("8080", REDIRECT_PORT) + "/api/user/" + URLEncoder.encode(email, "UTF-8"));
       request.setHeaderField(HttpHeaders.CONTENT_ENCODING, "UTF-8");
       WebConversation webConversation = new WebConversation();
       WebResponse response = webConversation.getResponse(request);

@@ -133,11 +133,11 @@
 		<version.java>1.8</version.java>
 		<version.javaee_api>7.0</version.javaee_api>
 		<version.junit>4.12</version.junit>
-		<version.wildfly>10.0.0.Final</version.wildfly>
-		<version.arquillian>1.1.11.Final</version.arquillian>
-		<version.shrinkwrap>2.2.4</version.shrinkwrap>
+		<version.wildfly>10.1.0.Final</version.wildfly>
+		<version.arquillian>1.1.13.Final</version.arquillian>
+		<version.shrinkwrap>2.2.6</version.shrinkwrap>
 		<version.picketbox>4.0.21.Final</version.picketbox>
-		<swagger-version>1.5.10</swagger-version>
+		<swagger-version>1.5.13</swagger-version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>

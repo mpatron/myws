@@ -23,20 +23,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  */
 @Entity
-@Table(
-    name = "ADDRESS",
-    indexes = {
-        @Index(
-            name = "idx_address_unique",
-            columnList = "user_uuid_id,type",
-            unique = true) })
+@Table(name = "ADDRESS", indexes = { @Index(name = "idx_address_unique", columnList = "user_uuid_id,type", unique = true) })
 @NamedQueries({
-    @NamedQuery(
-        name = Address.FIND_BY_USER,
-        query = "select t from Address t where t.user = :user"),
-    @NamedQuery(
-        name = Address.FIND_BY_USER_TYPE,
-        query = "select t from Address t where t.user = ?1 and t.type = ?2") })
+    @NamedQuery(name = Address.FIND_BY_USER, query = "select t from Address t where t.user = :user"),
+    @NamedQuery(name = Address.FIND_BY_USER_TYPE, query = "select t from Address t where t.user = ?1 and t.type = ?2") })
 public class Address extends AbstractUUIDBaseEntity implements Serializable {
   public static final String FIND_BY_USER = "Address.findByUser";
   public static final String FIND_BY_USER_TYPE = "Address.findByUserType";
@@ -51,19 +41,13 @@ public class Address extends AbstractUUIDBaseEntity implements Serializable {
   @Enumerated(EnumType.STRING)
   @Column(length = 4)
   private AddressEnum type;
-  @Size(
-      max = 80,
-      message = "La longueur de street est inférieur à 80 caractères.")
+  @Size(max = 80, message = "La longueur de street est inférieur à 80 caractères.")
   private String street;
-  @Size(
-      max = 40,
-      message = "La longueur de city est inférieur à 40 caractères.")
+  @Size(max = 40, message = "La longueur de city est inférieur à 40 caractères.")
   private String city;
   @Size(max = 2, message = "La longueur de state est inférieur à 2 caractères.")
   private String state;
-  @Size(
-      max = 20,
-      message = "La longueur de postcode est inférieur à 20 caractères.")
+  @Size(max = 20, message = "La longueur de postcode est inférieur à 20 caractères.")
   private String postcode;
   @JsonIgnore
   @ManyToOne(fetch = FetchType.EAGER)

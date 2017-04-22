@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.jobjects.myws.orm.AbstractUUIDBaseEntity;
 
 /**
@@ -27,17 +29,10 @@ import org.jobjects.myws.orm.AbstractUUIDBaseEntity;
     name = "USERS",
     indexes = {
         @Index(name = "idx_users_email", columnList = "email", unique = true),
-        @Index(
-            name = "idx_users_names",
-            columnList = "firstName,lastName",
-            unique = false) })
+        @Index(name = "idx_users_names", columnList = "firstName,lastName", unique = false) })
 @NamedQueries({
-    @NamedQuery(
-        name = User.FIND_BY_FIRSTNAME,
-        query = "select t from User t where t.firstName = :firstName"),
-    @NamedQuery(
-        name = User.FIND_BY_EMAIL,
-        query = "select t from User t where t.email = ?1") })
+    @NamedQuery(name = User.FIND_BY_FIRSTNAME, query = "select t from User t where t.firstName = :firstName"),
+    @NamedQuery(name = User.FIND_BY_EMAIL, query = "select t from User t where t.email = ?1") })
 public class User extends AbstractUUIDBaseEntity implements Serializable {
   public final static String FIND_BY_FIRSTNAME = "User.findByFirstName";
   public final static String FIND_BY_EMAIL = "User.findByEmail";
@@ -52,10 +47,7 @@ public class User extends AbstractUUIDBaseEntity implements Serializable {
   /**
    * Prénom de l'utilisateur.
    */
-  @Size(
-      min = 2,
-      max = 20,
-      message = "La longueur du prénom est comprise entre 2 et 20 caractères.")
+  @Size(min = 2, max = 20, message = "La longueur du prénom est comprise entre 2 et 20 caractères.")
   @NotNull
   private String firstName;
   /**
@@ -70,10 +62,7 @@ public class User extends AbstractUUIDBaseEntity implements Serializable {
   @NotNull
   @Pattern(regexp = "^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)+$")
   private String email;
-  @OneToMany(
-      mappedBy = "user",
-      fetch = FetchType.EAGER,
-      cascade = { CascadeType.ALL })
+  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
   protected List<Address> address = new ArrayList<Address>();
 
   /**
@@ -142,14 +131,15 @@ public class User extends AbstractUUIDBaseEntity implements Serializable {
    */
   @Override
   public String toString() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("User [firstName=");
-    builder.append(firstName);
-    builder.append(", lastName=");
-    builder.append(lastName);
-    builder.append(", email=");
-    builder.append(email);
-    builder.append("]");
-    return builder.toString();
+    // StringBuilder builder = new StringBuilder();
+    // builder.append("User [firstName=");
+    // builder.append(firstName);
+    // builder.append(", lastName=");
+    // builder.append(lastName);
+    // builder.append(", email=");
+    // builder.append(email);
+    // builder.append("]");
+    // return builder.toString();
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
   }
 }
