@@ -103,7 +103,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- test unitaire pour client -->
+		<!-- resttest unitaire pour client -->
 		<dependency>
 			<groupId>org.httpunit</groupId>
 			<artifactId>httpunit</artifactId>
@@ -143,7 +143,7 @@
 					<argLine>-Xms128m -Xmx256m</argLine>
 					<!-- <argLine>-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=256m</argLine> -->
 					<!-- <parallel>true</parallel> <forkMode>always</forkMode> -->
-					<!-- <suiteXmlFiles><suiteXmlFile>${basedir}/src/test/resources/testng.xml</suiteXmlFile></suiteXmlFiles> -->
+					<!-- <suiteXmlFiles><suiteXmlFile>${basedir}/resttest/resources/testng.xml</suiteXmlFile></suiteXmlFiles> -->
 					<systemProperties>
 						<property>
 							<name>java.util.logging.config.file</name>
@@ -219,10 +219,10 @@
 <instrumentation>
 <includes></includes>
 <excludes>
-<exclude>org.jobjects.myws.orm.UserStalessTest</exclude>
+<exclorg.jobjects.myws.orm.user.UserStalessTestTest</exclude>
                                     <exclude>org.jobjects.myws.email.RestEmailValidatorTest</exclude>
                                     <exclude>org.jobjects.myws.email.EMailValidatorTest</exclude>
-                                    <exclude>org.jobjects.myws.user.UserRESTWebServiceTest</exclude>
+                                    <exclorg.jobjects.myws.rest.UserRESTWebServiceTestrviceTest</exclude>
 </excludes>
 </instrumentation>
                     </configuration>
@@ -254,7 +254,7 @@
 			</activation>
 			<dependencies>
 				<!-- <dependency> <groupId>io.undertow</groupId> <artifactId>undertow-websockets-jsr</artifactId> 
-					<version>1.0.0.Beta25</version> <scope>test</scope> </dependency> -->
+					<version>1.0.0.Beta25</version> <scresttest</scope> </dependency> -->
 				<!-- ws-rest client -->
 				<dependency>
 					<groupId>org.jboss.resteasy</groupId>
@@ -320,7 +320,7 @@
 				<dependency>
 					<groupId>org.jboss.arquillian.testng</groupId>
 					<artifactId>arquillian-testng-container</artifactId>
-					<scope>test</scope>
+					<scresttest</scope>
 				</dependency>
 			</dependencies>
 		</profile>

@@ -16,14 +16,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import org.jobjects.myws.rest.Tracked;
+import org.jobjects.myws.rest.tools.Tracked;
 
 import io.swagger.annotations.Api;
 
 /**
  * @author Mickaël PATRON 2014
  **/
-@Api(value = "/batch", description = "Operations about batch test")
+@Api(value = "/batch", description = "Operations about batch rest")
 @Path("/batch")
 @RequestScoped
 @Tracked

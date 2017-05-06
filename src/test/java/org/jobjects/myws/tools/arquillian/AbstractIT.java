@@ -84,9 +84,9 @@ public abstract class AbstractIT {
    * @param war
    *          war archive to add packages to
    * @param prefix
-   *          base package
+   *          base rest
    * @param dir
-   *          directory for the base package
+   *          directory for the base rest
    */
   protected static void addAllPackages(WebArchive war, String prefix, File dir) {
     LOGGER.finest("Package add:" + prefix);

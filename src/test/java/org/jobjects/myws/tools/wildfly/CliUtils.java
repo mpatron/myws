@@ -21,7 +21,7 @@ import org.jboss.dmr.ModelNode;
 public class CliUtils {
   private final static Logger LOGGER = Logger.getLogger(CliUtils.class.getName());
   private static final String K_RESULT = "result";
-  private static final String FILE_PREFIX = "jboss-cli-test";
+  private static final String FILE_PREFIX = "jboss-cli-rest";
   private static final String FILE_SUFFIX = ".cli";
 
   private static final String V_SUCCESS = "success";
@@ -200,6 +200,6 @@ public class CliUtils {
   }
 
   public static void main(String[] args) throws Exception {
-    LOGGER.info("CliUtils => " + CliUtils.execute(new File("src/test/resources/jboss-montest-login-module.cli"), true));
+    LOGGER.info("CliUtils => " + CliUtils.execute(new File("src/rest/resources/jboss-montest-login-module.cli"), true));
   }
 }
