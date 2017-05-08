@@ -20,11 +20,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
+//@RunWith(Suite.class)
+//@SuiteClasses({ FirstDayAtSchoolTest.class, FirstDayAtSchoolTest2.class })
 public class SingletonUserRepositoryTest extends AbstractLocalIT {
   private Logger LOGGER = Logger.getLogger(getClass().getName());
 
   @EJB
-  UserRepository userRepository;
+  protected UserRepository userRepository;
+  //protected UserRepository userRepository = new SingletonUserRepository();
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
@@ -36,6 +39,7 @@ public class SingletonUserRepositoryTest extends AbstractLocalIT {
 
   @Before
   public void setUp() throws Exception {
+    //((SingletonUserRepository)userRepository).initialize();
   }
 
   @After
@@ -59,13 +63,11 @@ public class SingletonUserRepositoryTest extends AbstractLocalIT {
     user.setFirstName("toto");
     user.setLastName("titi");
     userRepository.addUser(user);
-    LOGGER.info(ReflectionToStringBuilder.toString((Object) user, ToStringStyle.JSON_STYLE, false));
-    userRepository.getUsers().stream().forEach(u -> {
+    LOGGER.info(ReflectionToStringBuilder.toString(user, ToStringStyle.JSON_STYLE, false));
+    for (User u : userRepository.getUsers()) {
       LOGGER.info(ReflectionToStringBuilder.toString(u, ToStringStyle.JSON_STYLE, false));
       Assert.assertNotNull(u);
     }
-
-    );
     Assert.assertTrue(userRepository.getUserCount() > 0);
   }
 

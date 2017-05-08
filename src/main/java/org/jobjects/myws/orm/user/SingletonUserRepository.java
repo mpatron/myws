@@ -17,7 +17,7 @@ public class SingletonUserRepository implements UserRepository {
     private Map<String, User> users;
     
     @PostConstruct
-    void initialize() {
+    public void initialize() {
         users = new LinkedHashMap<String, User>();
     }
 

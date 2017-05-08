@@ -1,14 +1,13 @@
 package org.jobjects.myws.email;
 
-import java.util.logging.Logger;
-
-import javax.ejb.EJB;
-
 import org.jboss.arquillian.junit.Arquillian;
 import org.jobjects.myws.tools.arquillian.AbstractLocalIT;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import javax.ejb.EJB;
+import java.util.logging.Logger;
 
 /**
  * @author Mickaël PATRON 2014

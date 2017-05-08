@@ -141,6 +141,7 @@
 				<version>2.19.1</version>
 				<configuration>
 					<argLine>-Xms128m -Xmx256m</argLine>
+                    <excludedGroups>org.jboss.arquillian.junit.Arquillian</excludedGroups>
 					<!-- <argLine>-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=256m</argLine> -->
 					<!-- <parallel>true</parallel> <forkMode>always</forkMode> -->
 					<!-- <suiteXmlFiles><suiteXmlFile>${basedir}/resttest/resources/testng.xml</suiteXmlFile></suiteXmlFiles> -->
@@ -156,6 +157,70 @@
 					</systemProperties>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.20</version>
+                <configuration>
+                    <groups>org.jboss.arquillian.junit.Arquillian</groups>
+                    <testFailureIgnore>false</testFailureIgnore>
+                    <systemPropertyVariables>
+                        <arquillian.launch>jbossas-remote-7</arquillian.launch>
+                    </systemPropertyVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.9</version>
+                <!--
+                <configuration>
+                    <includes>
+                    </includes>
+                    <excludes>
+                        <exclude>.....</exclude>
+                    </excludes>
+                </configuration>
+                -->
+                <executions>
+                    <execution>
+                        <id>default-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-prepare-agent-integration</id>
+                        <goals>
+                            <goal>prepare-agent-integration</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco-it.exec</destFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>Create Unit Test Report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>Create Integration Test Report</id>
+                        <goals>
+                            <goal>report-integration</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
