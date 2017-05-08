@@ -82,6 +82,7 @@ public class SingletonDomainRepository implements DomainRepository {
     // string character check
     if (!email.matches("[^@]+@([-\\p{Alnum}]+\\.)*\\p{Alnum}+")) {
       //Please check you are using only valid characters in the email address entered.
+      LOGGER.log(Level.WARNING, String.format("Email validation : regex unsatisfy %s", email));
       return false;
     }
       
@@ -105,12 +106,14 @@ public class SingletonDomainRepository implements DomainRepository {
         if (attr == null) {
           // This domain does not exist."
           add(hostname, false);
+          LOGGER.log(Level.WARNING, String.format("Email validation : domainname unsatisfy %s", hostname));
           return false; 
         } else {
           add(hostname, true);
           return true;// we have found records we are happy.
         }
       } catch (NamingException e) {
+        LOGGER.log(Level.SEVERE, e.getLocalizedMessage(), e);
         return false;
       }
     } else {
