@@ -78,7 +78,7 @@ public class CliUtils {
       throw new Exception("File " + f.getAbsolutePath() + " doesn't exist");
     }
 
-    final List<String> command = new ArrayList<String>();
+    final List<String> command = new ArrayList<>();
     command.add("java");
     command.add("-Djava.net.preferIPv4Stack=true");
     command.add("-Djava.net.preferIPv6Addresses=false");
@@ -159,16 +159,16 @@ public class CliUtils {
     }
 
     public void run() {
-      Scanner br = null;
-      try {
-        br = new Scanner(new InputStreamReader(inputStream));
+      //Scanner br = null;
+      try (Scanner br= new Scanner(new InputStreamReader(inputStream))) {
+        //br = new Scanner(new InputStreamReader(inputStream));
         String line = null;
         while (br.hasNextLine()) {
           line = br.nextLine();
           output.append(line + System.lineSeparator());
         }
-      } finally {
-        br.close();
+//      } finally {
+//        br.close();
       }
     }
 

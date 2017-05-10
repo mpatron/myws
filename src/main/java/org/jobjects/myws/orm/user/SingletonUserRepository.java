@@ -1,6 +1,4 @@
 package org.jobjects.myws.orm.user;
-import org.jobjects.myws.rest.user.UserRepository;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -17,8 +15,8 @@ public class SingletonUserRepository implements UserRepository {
     private Map<String, User> users;
     
     @PostConstruct
-    public void initialize() {
-        users = new LinkedHashMap<String, User>();
+    void initialize() {
+        users = new LinkedHashMap<>();
     }
 
     @Override

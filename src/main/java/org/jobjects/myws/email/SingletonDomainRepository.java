@@ -32,7 +32,7 @@ public class SingletonDomainRepository implements DomainRepository {
     domains = new HashMap<>();
 
     try {
-      Hashtable<String, String> env = new Hashtable<String, String>();
+      Hashtable<String, String> env = new Hashtable<>();
       env.put(javax.naming.Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.dns.DnsContextFactory");
       dirContext = new InitialDirContext(env);
     } catch (NamingException e) {

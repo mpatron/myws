@@ -1,6 +1,4 @@
-package org.jobjects.myws.rest.user;
-import org.jobjects.myws.orm.user.User;
-
+package org.jobjects.myws.orm.user;
 import java.util.Collection;
 
 import javax.ejb.Local;

@@ -46,15 +46,13 @@ public class ProcessBuilderExample {
   }
 
   private static void pipe(final InputStream src, final PrintStream dest) {
-    new Thread(new Runnable() {
-      public void run() {
-        try {
-          byte[] buffer = new byte[1024];
-          for (int n = 0; n != -1; n = src.read(buffer)) {
-            dest.write(buffer, 0, n);
-          }
-        } catch (IOException e) { // just exit
+    new Thread(() -> {
+      try {
+        byte[] buffer = new byte[1024];
+        for (int n = 0; n != -1; n = src.read(buffer)) {
+          dest.write(buffer, 0, n);
         }
+      } catch (IOException e) { // just exit
       }
     }).start();
   }

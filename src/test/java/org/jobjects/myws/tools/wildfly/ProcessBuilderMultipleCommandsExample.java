@@ -39,16 +39,16 @@ public class ProcessBuilderMultipleCommandsExample {
     }
 
     public void run() {
-      Scanner br = null;
-      try {
-        br = new Scanner(new InputStreamReader(inputStream));
+      //Scanner br = null;
+      try (Scanner br = new Scanner(new InputStreamReader(inputStream))) {
+        //br = new Scanner(new InputStreamReader(inputStream));
         String line = null;
         while (br.hasNextLine()) {
           line = br.nextLine();
           output.append(line + System.lineSeparator());
         }
-      } finally {
-        br.close();
+//      } finally {
+//        br.close();
       }
     }
 

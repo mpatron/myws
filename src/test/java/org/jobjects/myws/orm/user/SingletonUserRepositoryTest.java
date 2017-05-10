@@ -9,7 +9,6 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jobjects.myws.orm.user.User;
-import org.jobjects.myws.rest.user.UserRepository;
 import org.jobjects.myws.tools.arquillian.AbstractLocalIT;
 import org.junit.After;
 import org.junit.AfterClass;

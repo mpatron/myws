@@ -18,8 +18,207 @@
 		<version.shrinkwrap>2.2.6</version.shrinkwrap>
 		<version.picketbox>4.0.21.Final</version.picketbox>
 		<swagger-version>1.5.13</swagger-version>
-        <version.jacoco>0.7.9</version.jacoco>
-        <version.arquillian_jacoco>1.0.0.Alpha9</version.arquillian_jacoco>	</properties>
+		<jacoco-plugin.version>0.7.9</jacoco-plugin.version>
+	</properties>
+	<build>
+		<finalName>myws</finalName>
+		<defaultGoal>install</defaultGoal>
+		<plugins>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+			<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+            <source>${maven.compiler.source}</source>
+            <target>${maven.compiler.target}</target>
+            <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+    	</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.20</version>
+				<configuration>
+					<argLine>-Xms128m -Xmx256m ${surefireArgLine}</argLine>
+					<failIfNoTests>false</failIfNoTests>
+					<excludedGroups>org.jboss.arquillian.junit.Arquillian</excludedGroups>
+					<!-- <argLine>-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=256m</argLine> -->
+					<!-- <parallel>true</parallel> <forkMode>always</forkMode> -->
+					<!-- <suiteXmlFiles><suiteXmlFile>${basedir}/src/test/resources/testng.xml</suiteXmlFile></suiteXmlFiles> -->
+					<systemProperties>
+						<property>
+							<name>java.util.logging.config.file</name>
+							<value>${basedir}/src/test/resources/org/jobjects/myws/tools/log/logging.properties</value>
+						</property>
+						<property>
+							<name>derby.stream.error.file</name>
+							<value>${basedir}/target/derby.log</value>
+						</property>
+					</systemProperties>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.20</version>
+				<configuration>
+					<groups>org.jboss.arquillian.junit.Arquillian</groups>
+					<testFailureIgnore>false</testFailureIgnore>
+					<systemPropertyVariables>
+						<arquillian.launch>jbossas-remote-7</arquillian.launch>
+					</systemPropertyVariables>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco-plugin.version}</version>
+				<executions>
+	        <!--
+	            Prepares the property pointing to the JaCoCo runtime agent which
+	            is passed as VM argument when Maven the Surefire plugin is executed.
+	        -->
+	        <execution>
+	            <id>pre-unit-test</id>
+	            <goals>
+	                <goal>prepare-agent</goal>
+	            </goals>
+	            <configuration>
+	                <!-- Sets the path to the file which contains the execution data. -->
+	                <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
+	                <!--
+	                    Sets the name of the property containing the settings
+	                    for JaCoCo runtime agent.
+	                -->
+	                <propertyName>surefireArgLine</propertyName>
+	            </configuration>
+	        </execution>
+	        <!--
+	            Ensures that the code coverage report for unit tests is created after
+	            unit tests have been run.
+	        -->
+	        <execution>
+	            <id>post-unit-test</id>
+	            <phase>test</phase>
+	            <goals>
+	                <goal>report</goal>
+	            </goals>
+	            <configuration>
+	                <!-- Sets the path to the file which contains the execution data. -->
+	                <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
+	                <!-- Sets the output directory for the code coverage report. -->
+	                <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+	            </configuration>
+	        </execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.6</version>
+				<configuration>
+
+					<reportPlugins>
+						<plugin>
+							<!-- javadoc. -->
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-javadoc-plugin</artifactId>
+							<version>2.10.4</version>
+						</plugin>
+
+						<plugin>
+							<!-- vérifier la qualité du code avec checkstyle. -->
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-checkstyle-plugin</artifactId>
+							<version>2.17</version>
+							<configuration>
+							<!--
+								<configLocation>config/sun_checks.xml</configLocation>
+								<configLocation>config/maven_checks.xml</configLocation>
+								<configLocation>file:///D:/ProjetsJava/JValidation/src/test/resources/mp_checks.xml</configLocation>
+								<configLocation>mp_checks.xml</configLocation>
+								<configLocation>src/test/resources/google_checks.xml</configLocation>
+								<configLocation>sun_checks.xml</configLocation>
+							 -->
+								<configLocation>google_checks.xml</configLocation>
+							</configuration>
+						</plugin>
+            <!-- générer un rapport de couverture des tests. -->
+            <!--
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>cobertura-maven-plugin</artifactId>
+							<version>2.7</version>
+                <configuration>
+									<instrumentation>
+									<includes></includes>
+									<excludes>
+										<exclude>org.jobjects.myws.orm.UserStalessTest</exclude>
+	                  <exclude>org.jobjects.myws.email.RestEmailValidatorTest</exclude>
+	                  <exclude>org.jobjects.myws.email.EMailValidatorTest</exclude>
+	                  <exclude>org.jobjects.myws.user.UserRESTWebServiceTest</exclude>
+									</excludes>
+									</instrumentation>
+                </configuration>
+						</plugin>
+            -->
+						<plugin>
+							<!-- vérifier la qualité du code avec PMD. -->
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-pmd-plugin</artifactId>
+							<version>3.7</version>
+							<configuration>
+								<targetJdk>${compileSource}</targetJdk>
+							</configuration>
+						</plugin>
+						<!-- mvn findbugs:check -->
+						<!-- mvn findbugs:gui -->
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>findbugs-maven-plugin</artifactId>
+							<version>3.0.4</version>
+						</plugin>
+					</reportPlugins>
+				</configuration>
+			</plugin>
+		</plugins>
+                <!--
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>2.17</version>
+          <dependencies>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>7.3</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    -->
+	</build>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -126,47 +325,7 @@
 		</dependency>
 
 	</dependencies>
-	<build>
-		<finalName>myws</finalName>
-		<defaultGoal>install</defaultGoal>
-		<plugins>
-			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19.1</version>
-				<configuration>
-					<argLine>-Xms128m -Xmx256m @{argLine}</argLine>
-                    <excludedGroups>org.jboss.arquillian.junit.Arquillian</excludedGroups>
-					<!-- <argLine>-Xms128m -Xmx256m -XX:PermSize=128m -XX:MaxPermSize=256m</argLine> -->
-					<!-- <parallel>true</parallel> <forkMode>always</forkMode> -->
-					<!-- <suiteXmlFiles><suiteXmlFile>${basedir}/resttest/resources/testng.xml</suiteXmlFile></suiteXmlFiles> -->
-					<systemProperties>
-						<property>
-							<name>java.util.logging.config.file</name>
-							<value>${basedir}/src/test/resources/org/jobjects/myws/tools/log/logging.properties</value>
-						</property>
-						<property>
-							<name>derby.stream.error.file</name>
-							<value>${basedir}/target/derby.log</value>
-						</property>
-					</systemProperties>
-				</configuration>
-			</plugin>
-            <!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>3.6</version>
-			</plugin>
-			-->
-		</plugins>
-	</build>
+
 <reporting>
 <plugins>
     <plugin>
@@ -236,8 +395,8 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<dependencies>
-				<!-- <dependency> <groupId>io.undertow</groupId> <artifactId>undertow-websockets-jsr</artifactId> 
-					<version>1.0.0.Beta25</version> <scresttest</scope> </dependency> -->
+				<!-- <dependency> <groupId>io.undertow</groupId> <artifactId>undertow-websockets-jsr</artifactId>
+					<version>1.0.0.Beta25</version> <scope>test</scope> </dependency> -->
 				<!-- ws-rest client -->
 				<dependency>
 					<groupId>org.jboss.resteasy</groupId>
@@ -296,52 +455,5 @@
 				</dependency>
 			</dependencies>
 		</profile>
-        <!--
-        cls && mvn clean test site -P wildfly-remote-arquillian,jacoco
-        -->
-        <profile>
-            <id>jacoco</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>org.jacoco.core</artifactId>
-                    <version>${version.jacoco}</version>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.jboss.arquillian.extension</groupId>
-                    <artifactId>arquillian-jacoco</artifactId>
-                    <version>${version.arquillian_jacoco}</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>${version.jacoco}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>report</id>
-                                <phase>test</phase>
-                                <goals>
-                                    <goal>report</goal>
-                                </goals>
-                                <configuration>
-                                    <!-- Sets the output directory for the code coverage report. -->
-                                    <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
 	</profiles>
 </project>
